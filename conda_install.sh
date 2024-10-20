@@ -6,7 +6,7 @@ sudo dnf install google-chrome
 sudo dnf -y install google-chrome-stable
 
 cd chromdriver
-sudo mv chromedrive /usr/bin/chromedriver
+sudo mv chromedriver /usr/bin/chromedriver
 
 sudo chown root:root /usr/bin/chromedriver
 sudo chmod 0755 /usr/bin/chromedriver

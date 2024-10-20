@@ -1,7 +1,3 @@
-conda activate flurryenvironment
-
-sudo dnf -y install python-pip3
-
 pip3 install selenium
 pip3 install termcolor
 pip3 install paho-mqtt
