@@ -11,4 +11,4 @@ echo 'camflow:camflow'>password.txt
 mosquitto_passwd -U password.txt
 
 echo 'allow_anonymous false' > mosquitto.conf
-echo 'password_file /home/$USER/flurry/mosquitto/password.txt' >> mosquitto.conf
+echo 'password_file /home/periadhityan/flurry/mosquitto/password.txt' >> mosquitto.conf
