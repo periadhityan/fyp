@@ -7,20 +7,24 @@ echo "Cloning flurry repository for intallation"
 git clone https://github.com/mayakapoor/flurry
 
 echo "Resetting to previous working commit"
-git reset --hard 42a548d
+
 
 echo "Navigating into flurry directory"
 cd flurry
+git init
+git reset --hard 42a548d441447defd4b6b3ef8841f6c5c353ed42
 
 echo "Cloning flake repository"
 git clone https://github.com/mayakapoor/flake
 
-flakeini = "
+echo "Configuring flake.ini"
+cd /home/$USER/flurry/flake/src/flurryflake
+sh -c "echo '
 [DEFAULT]
 OUTPUT_DIR=/home/$USER/flurry/output
 INPUT_DIR=
 
-[DATABASE]
+[DATABASE] 
 DB_FILE=/home/$USER/flurry/data/flake.db
 SAVE_TO_DISK=yes
 
@@ -30,15 +34,13 @@ MQTT_PASSWORD=camflow
 MQTT_HOST=localhost
 MQTT_PORT=1883
 MQTT_TOPIC=camflow/provenance#
-CAMFLOW_TOPIC=provenance/camflow#
-"
-echo "Configuring flake.ini"
-
-echo $flakeini > /home/$USER/flurry/flake/src/flurryflake/flake.ini
+CAMFLOW_TOPIC=provenance/camflow#' > flake.ini"
 
 echo "Configuring config.py"
+cd /home/$USER/flurry/flake/src/flurryflake
+rm config.py
 
-configpy = "
+sh -c "echo '
 import configparser
 import os
 import sys
@@ -49,22 +51,39 @@ configp.read(config_path)
 
 # check if the path is to the valid file
 if not os.path.isfile(config_path):
-	print(config_path)
-	print("Invalid configuration path provided.")
-	sys.exit()
-
+ print(config_path)
+ sys.exit()
+ 
 def initFromConfig(param):
-	for section in configp.sections():
-	if configp.has_option(section, param):
-		return configp[section][param]
-	print("Error initializing " + str(param) + "from config. Parameter not found.")
-	sys.exit()
-"
+ for section in configp.sections():
+ if configp.has_option(section, param):
+  return configp[section][param]
+ sys.exit()' > config.py"
+ 
+cd /home/$USER/flurry/flake/src/flurryflake/filters
+sh -c "echo '
+import configparser
+import os
+import sys
 
-echo $configpy > /home/$USER/flurry/flake/src/flurryflake/config.py
-echo $configpy > /home/$USER/flurry/flake/src/flurryflake/filters/config.py
+configp = configparser.ConfigParser()
+config_path = 'home/$USER/flurry/flake/src/flurryflake/flake.ini'
+configp.read(config_path)
 
-camflowd = "
+# check if the path is to the valid file
+if not os.path.isfile(config_path):
+ print(config_path)
+ sys.exit()
+ 
+def initFromConfig(param):
+ for section in configp.sections():
+ if configp.has_option(section, param):
+  return configp[section][param]
+ sys.exit()' > config.py"
+
+echo  "Configuring camflowd.ini"
+cd /etc
+sudo sh -c "echo '
 [general]
 ;output=null
 output=mqtt
@@ -92,12 +111,10 @@ topic=camflow/provenance
 address=/tmp/camflowd.sock
 
 [fifo]
-path/tmp/camflowd-pipe
-"
+path/tmp/camflowd-pipe' > camflowd.ini"
 
-echo $camflowd > /etc/camflowd.ini
-
-camflow="
+echo  "Configuring camflow.ini"
+sudo sh -c "echo '
 [provenance]
 ;unique identifier for the machine, use hostid if set to 0
 machine_id=0
@@ -153,8 +170,4 @@ opaque=/usr/bin/bash
 [secctx]
 ;track=system_u:object_r:bin_t:s0
 ;propagate=system_u:object_r:bin_t:s0
-;opaque=system_u:object_r:bin_t:s0
-"
-
-echo $camflow > /etc/camflow.ini
-
+;opaque=system_u:object_r:bin_t:s0' > camflow.ini"
