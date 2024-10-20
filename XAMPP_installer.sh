@@ -6,4 +6,4 @@ echo "Installing XAMPP"
 chmod +x xampp-installer.run
 
 echo "Complete XAMPP installation through GUI"
-sudo /.xampp-installer.run
+sudo ./xampp-installer.run
