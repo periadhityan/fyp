@@ -1,7 +1,7 @@
 echo "Installing Mosquitto MQTT"
 
 sudo dnf -y install mosquitto
-suso systemctl enable mosquitto.service
+sudo systemctl enable mosquitto.service
 
 cd /home/$USER/flurry
 mkdir mosquitto
