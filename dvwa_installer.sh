@@ -8,6 +8,7 @@ sudo cp /opt/lampp/htdocs/DVWA/config/config.inc.php.dist /opt/lampp/htdocs/DVWA
 sudo cp -r /opt/lampp/htdocs/DVWA/* /opt/lampp/htdocs
 
 sudo cp /home/$USER/fyp/dvwaconfig.txt /opt/lampp/htdocs/DVWA/config/config.inc.php
+sudo cp /home/$USER/fyp/dvwaconfig.txt /opt/lampp/htdocs/config/config.inc.php
 
 sudo sed -i "s/dashboard/login.php/" /opt/lampp/htdocs/index.php
 
