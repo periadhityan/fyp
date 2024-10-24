@@ -1,5 +1,6 @@
 sudo dnf -y install conda
-conda --init bash
+conda create -n "flurryenv" python=3.6
+conda init bash
 
 sudo dnf config-manager --set-enabled google-chrome
 sudo dnf install google-chrome
