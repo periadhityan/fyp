@@ -15,5 +15,9 @@ sudo sed -i 's|format=spade_json|;format=spade_json|g' /etc/camflowd.ini
 
 sudo systemctl restart camflowd.service
 echo "Success!"
- 
+
+sudo touch example.txt
+sudo camflow --track-file example.txt true
+sudo rm example.txt
+camtool --publish /tmp/audit.log
 
