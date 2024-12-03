@@ -1,4 +1,4 @@
-echo "Installing dependancied"
+echo "Installing dependancies"
 sudo dnf -y update
 sudo dnf -y install libnsl
 echo "Installing XAMPP"
