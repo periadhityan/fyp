@@ -1,4 +1,0 @@
-message
-message,submit
-message,submit,query
-message,submit,query,ping
