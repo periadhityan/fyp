@@ -9,9 +9,10 @@ def flurry_webserver(input_scenario):
 
 def main():
     suffix = "\n1\n1\nf\nc"
-    with open("benign_scenarios.txt", 'r') as f:
+    with open("mini_sample.txt", 'r') as f:
         for line in f:
             input = line+suffix
-            
+            flurry_webserver(input)
+
 if __name__== "__main__":
     main()
