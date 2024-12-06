@@ -3,7 +3,7 @@ import subprocess
 def flurry_webserver(input_scenario):
     p = subprocess.Popen(['python', 'webserver.py'], stdin=subprocess.PIPE,
                                                     stdout=subprocess.PIPE,
-                                                    encoding='útf8')
+                                                    encoding='utf8')
     p.communicate(input=input_scenario)
 
 
