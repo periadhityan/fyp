@@ -12,7 +12,7 @@ def main():
     with open("mini_sample.txt", 'r') as f:
         for line in f:
             input = line+suffix
-            flurry_webserver(input)
+            print(input)
 
 if __name__== "__main__":
     main()
