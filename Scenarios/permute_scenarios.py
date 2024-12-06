@@ -99,4 +99,9 @@ def malicious_permutations():
                     f.write(",")
             f.write("\n")
 
+def main():
+    benign_permutations()
+    malicious_permutations()
 
+if __name__ == "__main__":
+    main()
