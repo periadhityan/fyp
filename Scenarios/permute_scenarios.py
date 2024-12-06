@@ -100,6 +100,3 @@ def malicious_permutations():
             f.write("\n")
 
 
-malicious_permutations()
-
-
