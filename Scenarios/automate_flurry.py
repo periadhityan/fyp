@@ -3,7 +3,7 @@ import os
 import shutil
 from tqdm import tqdm  # For progress bars
 
-def flurry_webserver(input_scenario):
+def flurry_webserver(input_scenario, sudo_password):
     """
     Executes the webserver script with the given input scenario.
     """
@@ -11,13 +11,24 @@ def flurry_webserver(input_scenario):
                          stdin=subprocess.PIPE, 
                          stdout=subprocess.PIPE, 
                          encoding='utf8')
-    p.communicate(input=input_scenario)
+    
+    output, error = p.communicate(input=input_scenario, timeout=100)
+
+    if("[sudo] password" in output.lower()):
+        p.stdin.write(sudo_password + "\n")
+        output, error = p.communicate(timeout=30)
+
+    return output, error
 
 def main():
     suffix = "1\n1\nf\nc"
     input_file = "mini_sample.txt"
     output_dir = "/home/periadhityan/fyp/benign_outputs"
     flurry_output_dir = "/home/periadhityan/flurry/output"
+    sudo_password = "Aebn2mui9teokr!"
+    output_log = "/home/periadhityan/fyp/benign_outputs/output_log.txt"
+    unsuccessful_runs = "/home/periadhityan/fyp/benign_outputs/unsuccessful_runs.txt"
+
     os.makedirs(output_dir, exist_ok=True)  # Ensure output directory exists
 
     # Read and process input file
@@ -27,8 +38,16 @@ def main():
     for line in tqdm(lines, desc="Processing Scenarios", unit="scenario"):
         line = line.strip()  # Remove trailing whitespace or newline
         print(f"Running Scenario: {line}")
-        input_data = line + suffix
-        flurry_webserver(input_data)
+        input_data = line + "\n" + suffix
+        output, error = flurry_webserver(input_data, sudo_password)
+
+        with open(output_log, 'a') as f:
+            f.write(f"Scenarios: {line}\nResult: {output}")
+        
+        if error:
+            with open(unsuccessful_runs, 'a') as f:
+                f.write(f"{line}")
+
 
     # Traverse flurry output directory and copy relevant files
     i = 1
