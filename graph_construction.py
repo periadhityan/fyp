@@ -4,11 +4,11 @@ os.environ["DGLBACKEND"] = "pytorch"
 import dgl
 import torch
 import json
+import time
 
 json_files = [os.path.join('benign_outputs', file) for file in os.listdir('benign_outputs') if file.endswith('.json')]
 
 def create_heterograph(json_file):
-    print(json_file)
 
     with open(json_file, "r") as f:
         data = json.load(f)
@@ -47,14 +47,9 @@ def create_heterograph(json_file):
     for ntype, features in node_features.items():
         hetero_graph.nodes[ntype].data['feat'] = features
 
-    print(f"{json_file} is a success")
-
     return hetero_graph
 
-graphs = []
 
-for i in range(len(json_files)):
-    graphs.append(create_heterograph(json_files[i]))
     
 
 
