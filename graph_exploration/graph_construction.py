@@ -6,6 +6,7 @@ import torch
 import json
 
 from dgl.data import DGLDataset
+from torch.utils.data import DataLoader
 
 
 def main():
@@ -15,8 +16,6 @@ def main():
     for file in os.listdir("graph1566"):
         if("graph" in file and file.endswith("json")):
             graph_file = os.path.join("graph1566", file)
-
-    print("\nExploring Graphs with DGL")
 
     g = create_heterograph(graph_file)
 
@@ -31,16 +30,43 @@ def main():
         #print(f"Number of Edges for type {etype}: {g.num_edges(etype)}")
         g.edges[etype].data['feat'] = torch.randn(g.num_edges(etype), 3)
 
-    print("\nThese are the details for the graph as below")
-    print(f"Number of Nodes: {g.num_nodes()}")
-    print(f"Number of edges: {g.num_edges()}")
-
     graphs.append(g)
 
     #Creating a dataset of graphs
     dataset = ProvenanceDataset(graphs, 'benign')
 
-    print(dataset.labels)
+    dataloader = DataLoader(dataset, batch_size=8, shuffle=True, collate_fn=custom_collate_fn)
+
+    #Saving and Loading graphs
+    
+    labels = {'labels': torch.zeros(len(dataset))}
+
+    dgl.save_graphs('single_benign_graph.bin', graphs, labels)
+
+    graphs2, labels2 = dgl.load_graphs('single_benign_graph.bin')
+
+
+
+'''
+    print("\nExploring Graphs with DGL")
+    print("\nThese are the details for the graph as below")
+    print(f"Number of Nodes: {g.num_nodes()}")
+    print(f"Number of edges: {g.num_edges()}")
+
+    for ntype in g.ntypes:
+        print(f"Node type {ntype} has \t\t{g.nodes[ntype].data['feat'].shape[1]} features")
+
+    for etype in g.canonical_etypes:
+        print(f"Edge type {etype} has \t\t{g.edges[etype].data['feat'].shape[1]} features")
+    
+    for batch_graph, batch_labels in dataloader:
+        print("Batched Graph: ", batch_graph)
+        print("Batched Labels: ", batch_labels)
+'''
+
+
+
+
 
 
 
@@ -81,6 +107,13 @@ class ProvenanceDataset(DGLDataset):
     
     def __len__(self):
         return len(self.graphs)
+    
+def custom_collate_fn(batch):
+    graphs, labels = zip(*batch)
+    batched_graph = dgl.batch(graphs)
+    batch_labels = torch.stack(labels)
+
+    return batched_graph, batch_labels
     
 
 if __name__ == '__main__':
