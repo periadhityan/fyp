@@ -8,8 +8,9 @@ class HGraphDataset(DGLDataset):
         super().__init__(name='hetero_graph_dataset')
 
     def process(self):
-        self.graphs = [create_heterograph(self.json_files[file]) for file in self.json_files]
-        self.labels = "Benign"
+        self.graphs = [create_heterograph(self.json_files[i]) for i in range(len(self.json_files))]
+        self.labels = torch.tensor([0 for _ in self.graphs])
+        # Creating benign graph dataset
 
     def __getitem__(self, idx):
         return self.graphs[idx], self.labels[idx]
