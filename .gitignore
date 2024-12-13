@@ -2,4 +2,4 @@
 # Add patterns to ignore files and directories
 # Example: *.log to ignore all log files
 
-.bin
+*.bin
