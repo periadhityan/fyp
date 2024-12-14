@@ -31,7 +31,11 @@ def main():
 
     for ntype in g1.ntypes:
         print(f"Updated features for {ntype}:\n{g1.nodes[ntype].data['h']}")
-    
+
+    #Save graphs to another bin file
+        
+    dgl.save_graphs('after_mp.bin', g1, labels)
+        
     """input_dims = {ntype: 3 for ntype in g2.ntypes}
     hidden_dims = {(srctype, etype, dsttype): 3 for srctype, etype, dsttype in g2.canonical_etypes}
 
