@@ -7,7 +7,8 @@ import json
 
 from dgl.data import DGLDataset
 from torch.utils.data import DataLoader
-
+import dgl.function as fn
+import torch.nn as nn
 
 def main():
 
@@ -23,12 +24,12 @@ def main():
 
     for ntype in g.ntypes:
         #print(f"Number of nodes of type {ntype}: {g.num_nodes(ntype)}")
-        g.nodes[ntype].data['feat'] = torch.randn(g.num_nodes(ntype), 3)
+        g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 3)
 
     #print("\nCreating Edge Features for Graph\n")
     for etype in g.canonical_etypes:
         #print(f"Number of Edges for type {etype}: {g.num_edges(etype)}")
-        g.edges[etype].data['feat'] = torch.randn(g.num_edges(etype), 3)
+        g.edges[etype].data['v'] = torch.randn(g.num_edges(etype), 3)
 
     graphs.append(g)
 
@@ -38,16 +39,14 @@ def main():
     dataloader = DataLoader(dataset, batch_size=8, shuffle=True, collate_fn=custom_collate_fn)
 
     #Saving and Loading graphs
-    
+
     labels = {'labels': torch.zeros(len(dataset))}
 
     dgl.save_graphs('single_benign_graph.bin', graphs, labels)
 
-    graphs2, labels2 = dgl.load_graphs('single_benign_graph.bin')
 
 
-
-'''
+"""
     print("\nExploring Graphs with DGL")
     print("\nThese are the details for the graph as below")
     print(f"Number of Nodes: {g.num_nodes()}")
@@ -62,13 +61,8 @@ def main():
     for batch_graph, batch_labels in dataloader:
         print("Batched Graph: ", batch_graph)
         print("Batched Labels: ", batch_labels)
-'''
 
-
-
-
-
-
+"""    
 
 def create_heterograph(json_file):
 
@@ -114,7 +108,6 @@ def custom_collate_fn(batch):
     batch_labels = torch.stack(labels)
 
     return batched_graph, batch_labels
-    
 
 if __name__ == '__main__':
     main()
