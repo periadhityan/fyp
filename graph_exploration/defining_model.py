@@ -1,11 +1,9 @@
 import dgl
-import dgl.nn.pytorch as dglnn
 import torch.nn as nn
 import torch.nn.functional as F
-from dgl.dataloading import GraphDataLoader
 import torch
-from message_passing import HeteroGraphConvLayer
 from torch.utils.data import DataLoader
+from sklearn.model_selection import train_test_split
 
 def main():
     graphs, labels = dgl.load_graphs('after_mp.bin')
@@ -13,7 +11,13 @@ def main():
 
     dataset = list(zip(graphs, labels))
 
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True, collate_fn=custom_collate_fn)
+    #dataloader = DataLoader(dataset, batch_size=32, shuffle=True, collate_fn=custom_collate_fn)
+
+    train_dataset, test_dataset = train_test_split(dataset, test_size=0.2, random_state=42)
+
+    train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
+    test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False, collate_fn=custom_collate_fn)
+
 
     input_dim = 3 
     hidden_dim = 128
@@ -32,7 +36,7 @@ def main():
         model.train()
         total_loss = 0
 
-        for batched_graph, batched_labels in dataloader:
+        for batched_graph, batched_labels in train_dataloader:
             batched_graph = batched_graph.to(device)
             batched_labels = batched_labels.to(device)
 
@@ -45,13 +49,7 @@ def main():
 
             total_loss += loss.item()
 
-        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}')
-
-    # Create a DataLoader for the test set
-    test_graphs, test_labels = dgl.load_graphs('after_mp.bin')
-    test_labels = test_labels['labels']
-    test_dataset = list(zip(test_graphs, test_labels))
-    test_dataloader = DataLoader(test_dataset, batch_size=32, collate_fn=custom_collate_fn)
+        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_dataloader)}')
 
     # Evaluate
     model.eval()
