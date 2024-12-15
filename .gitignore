@@ -3,3 +3,4 @@
 # Example: *.log to ignore all log files
 
 *.bin
+*.json

@@ -2,40 +2,37 @@ import dgl
 import dgl.function as fn
 import torch
 import torch.nn as nn
+from tqdm import tqdm
 
 def main():
-    graphs, labels = dgl.load_graphs('single_benign_graph.bin')
+    graphs, labels = dgl.load_graphs('benign_graphs.bin')
 
     """for graph in graphs:
         for ntype in graph.ntypes:
             print(graph.nodes[ntype].data['h'].shape)
         for etype in graph.canonical_etypes:
             print(graph.edges[etype].data['v'].shape)"""
-    
-    g1 = graphs[0]
-    g2 = graphs[0]
 
-    num_rounds = 10
+    num_rounds = 1
 
     """for ntype in g1.ntypes:
         print(f"Features for {ntype}:\n{g1.nodes[ntype].data['h']}")"""
 
-    input_dims = {ntype: 3 for ntype in g1.ntypes}
-    hidden_dims = {(srctype, etype, dsttype): 3 for srctype, etype, dsttype in g1.canonical_etypes}
+    for g in tqdm(graphs, desc="Message Passing", unit="Graphs"):
+        for _ in range(num_rounds):
+                input_dims = {ntype: 3 for ntype in g.ntypes}
+                hidden_dims = {(srctype, etype, dsttype): 3 for srctype, etype, dsttype in g.canonical_etypes}
+                conv_layer = HeteroGraphConvLayer(g, input_dims, hidden_dims)
+                feat_dict = {ntype: g.nodes[ntype].data['h'] for ntype in g.ntypes}
+                updated_feats = conv_layer(feat_dict)
 
-    conv_layer = HeteroGraphConvLayer(g1, input_dims, hidden_dims)
-    feat_dict = {ntype: g1.nodes[ntype].data['h'] for ntype in g1.ntypes}
-
-    for _ in range(num_rounds):
-        updated_feats = conv_layer(feat_dict)
-
-    for ntype in g1.ntypes:
-        print(f"Updated features for {ntype}:\n{g1.nodes[ntype].data['h']}")
+    """for ntype in g.ntypes:
+        print(f"Updated features for {ntype}:\n{g.nodes[ntype].data['h']}")"""
 
     #Save graphs to another bin file
         
-    dgl.save_graphs('after_mp.bin', g1, labels)
-        
+    dgl.save_graphs('after_mp.bin', graphs, labels)
+
     """input_dims = {ntype: 3 for ntype in g2.ntypes}
     hidden_dims = {(srctype, etype, dsttype): 3 for srctype, etype, dsttype in g2.canonical_etypes}
 

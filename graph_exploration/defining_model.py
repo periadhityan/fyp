@@ -15,7 +15,7 @@ def main():
 
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True, collate_fn=custom_collate_fn)
 
-    input_dim = 3 #graphs[0].nodes[any].data['h'].shape[1]
+    input_dim = 3 
     hidden_dim = 128
     output_dim = len(torch.unique(labels))
 

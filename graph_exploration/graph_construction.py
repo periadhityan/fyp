@@ -10,39 +10,36 @@ from torch.utils.data import DataLoader
 import dgl.function as fn
 import torch.nn as nn
 
+from tqdm import tqdm
+
 def main():
 
     graphs = []
 
-    for file in os.listdir("graph1566"):
-        if("graph" in file and file.endswith("json")):
-            graph_file = os.path.join("graph1566", file)
+    for file in tqdm(os.listdir("benign_outputs"), desc="Creating DGL graphs", unit="Graphs"):
+        graph_file = os.path.join("benign_outputs", file)
+        g = create_heterograph(graph_file)
+        graphs.append(g)
 
-    g = create_heterograph(graph_file)
+    for g in tqdm(graphs, desc="Creating Node and Edge features", unit="Graphs"):
+        #print("\nCreating Node Features for Graph\n")  
+        for ntype in g.ntypes:
+            #print(f"Number of nodes of type {ntype}: {g.num_nodes(ntype)}")
+            g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 3)
 
-    #print("\nCreating Node Features for Graph\n")   
+        #print("\nCreating Edge Features for Graph\n")
+        for etype in g.canonical_etypes:
+            #print(f"Number of Edges for type {etype}: {g.num_edges(etype)}")
+            g.edges[etype].data['v'] = torch.randn(g.num_edges(etype), 3)
 
-    for ntype in g.ntypes:
-        #print(f"Number of nodes of type {ntype}: {g.num_nodes(ntype)}")
-        g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 3)
-
-    #print("\nCreating Edge Features for Graph\n")
-    for etype in g.canonical_etypes:
-        #print(f"Number of Edges for type {etype}: {g.num_edges(etype)}")
-        g.edges[etype].data['v'] = torch.randn(g.num_edges(etype), 3)
-
-    graphs.append(g)
+    
 
     #Creating a dataset of graphs
     dataset = ProvenanceDataset(graphs, 'benign')
 
-    dataloader = DataLoader(dataset, batch_size=8, shuffle=True, collate_fn=custom_collate_fn)
-
-    #Saving and Loading graphs
-
+    #Saving graphs
     labels = {'labels': torch.zeros(len(dataset))}
-
-    dgl.save_graphs('single_benign_graph.bin', graphs, labels)
+    dgl.save_graphs('benign_graphs.bin', graphs, labels)
 
 
 
