@@ -79,6 +79,14 @@ def malicious_permutations():
                 if(action != line[-1]):
                     f.write(",")
             f.write("\n")
+
+    with open('malextra1.txt', 'w') as f:
+        for line in perms[2000:2400]:
+            for action in line:
+                f.write(action)
+                if(action != line[-1]):
+                    f.write(",")
+            f.write("\n")
     
     mal.remove(malicious[0])
     mal.append(malicious[1])
@@ -113,6 +121,14 @@ def malicious_permutations():
 
     with open('mal8.txt', 'w') as f:
         for line in perms[4200:4600]:
+            for action in line:
+                f.write(action)
+                if(action != line[-1]):
+                    f.write(",")
+            f.write("\n")
+
+    with open('malextra2.txt', 'w') as f:
+        for line in perms[2000:2400]:
             for action in line:
                 f.write(action)
                 if(action != line[-1]):
@@ -158,6 +174,14 @@ def malicious_permutations():
                     f.write(",")
             f.write("\n")
 
+    with open('malextra3.txt', 'w') as f:
+        for line in perms[2000:2400]:
+            for action in line:
+                f.write(action)
+                if(action != line[-1]):
+                    f.write(",")
+            f.write("\n")
+
     mal.remove(malicious[2])
     mal.append(malicious[3])
 
@@ -196,6 +220,15 @@ def malicious_permutations():
                 if(action != line[-1]):
                     f.write(",")
             f.write("\n")
+
+    with open('malextra4.txt', 'w') as f:
+        for line in perms[2000:2400]:
+            for action in line:
+                f.write(action)
+                if(action != line[-1]):
+                    f.write(",")
+            f.write("\n")
+
 
     mal.remove(malicious[3])
     mal.append(malicious[4])
@@ -236,6 +269,14 @@ def malicious_permutations():
                     f.write(",")
             f.write("\n")
 
+    with open('malextra5.txt', 'w') as f:
+        for line in perms[2000:2400]:
+            for action in line:
+                f.write(action)
+                if(action != line[-1]):
+                    f.write(",")
+            f.write("\n")
+
     mal.remove(malicious[4])
     mal.append(malicious[5])
 
@@ -269,6 +310,14 @@ def malicious_permutations():
 
     with open('mal24.txt', 'w') as f:
         for line in perms[4200:4600]:
+            for action in line:
+                f.write(action)
+                if(action != line[-1]):
+                    f.write(",")
+            f.write("\n")
+
+    with open('malextra6.txt', 'w') as f:
+        for line in perms[2000:2400]:
             for action in line:
                 f.write(action)
                 if(action != line[-1]):
