@@ -42,5 +42,3 @@ def create_graph(file):
         g.node[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 32)
 
     return g 
-
-#test()

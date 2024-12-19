@@ -6,9 +6,6 @@ import dgl.function as fn
 import torch.nn as nn
 from tqdm import tqdm
 
-def test():
-    pass
-
 class GraphConvolution():
     def __init__(self, graph, input, hidden):
         super(GraphConvolution, self).__init__()

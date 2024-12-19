@@ -3,6 +3,8 @@ os.environ["DGLBACKEND"] = "pytroch"
 
 import dgl
 import torch
+from torch.utils.data import DataLoader
+from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 from GNN.GraphCreation import create_graph
@@ -22,7 +24,17 @@ def main():
     PassingMessages(graphs, message_passing_rounds)
     dgl.save_graphs('benign.bin', graphs, labels)"""
 
+    graphs, labels = dgl.load_graphs('benign.bin')
+    labels = labels['labels']
 
+    dataset = list(zip(graphs, labels))
+    train_set, test_set = train_test_split(dataset, test_size=0.2, random_state=42)
+
+    train_loader = DataLoader(train_set, batch_size=1, shuffle=True, collate_fn=dgl.batch)
+    test_loader = DataLoader(test_set, batch_size=1, shuffle=False, collate_fn=dgl.batch)
+
+    
+    
 
 
 def CreatingGraphs(graphs_folder, graphs_type):
