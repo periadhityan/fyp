@@ -1,30 +1,34 @@
 import os
-os.environ["DGLBACKEND"] = "pytroch"
+os.environ["DGLBACKEND"] = "pytorch"
 
 import dgl
 import torch
 from torch.utils.data import DataLoader
+import torch.nn.functional as F
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
+import time
 
-from GNN.GraphCreation import create_graph
-from GNN.MessagePassing import GraphConvolution
+from GraphCreation import create_graph
+from MessagePassing import GraphConvolution
+from GraphClassifier import HetroClassifier
 
 def main():
-    graphs_folder = ""
-    graphs_type = ""
+    graphs_folder = "Benign_Graphs\mini"
+    graphs_type = "benign"
 
     benign_graphs = ""
     message_passing_rounds = 3
 
+
     """graphs, labels = CreatingGraphs(graphs_folder, graphs_type)
-    dgl.save_graphs('benign.bin', graphs, labels)"""
+    dgl.save_graphs(f'mini.bin', graphs, labels)"""
 
     """graphs, labels = dgl.load_graphs(benign_graphs)
     PassingMessages(graphs, message_passing_rounds)
     dgl.save_graphs('benign.bin', graphs, labels)"""
 
-    graphs, labels = dgl.load_graphs('benign.bin')
+    graphs, labels = dgl.load_graphs('mini.bin')
     labels = labels['labels']
 
     dataset = list(zip(graphs, labels))
@@ -33,8 +37,6 @@ def main():
     train_loader = DataLoader(train_set, batch_size=1, shuffle=True, collate_fn=dgl.batch)
     test_loader = DataLoader(test_set, batch_size=1, shuffle=False, collate_fn=dgl.batch)
 
-    
-    
 
 
 def CreatingGraphs(graphs_folder, graphs_type):

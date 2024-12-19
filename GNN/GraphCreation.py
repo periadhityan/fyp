@@ -39,6 +39,6 @@ def create_graph(file):
     g = dgl.heterograph(graph_data)
     
     for ntype in g.ntypes:
-        g.node[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 32)
+        g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 32)
 
     return g 
