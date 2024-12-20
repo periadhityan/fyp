@@ -20,6 +20,18 @@ def test():
 
     dgl.save_graphs('benign.bin', graphs, labels)
 
+def CreatingGraphs(graphs_folder, graphs_type):
+
+    graphs = []
+
+    for file in tqdm(os.listdir(graphs_folder), desc="Creating Graphs", unit="Graphs"):
+        json_file = os.path.join(graphs_folder, file)
+        g = create_graph(json_file)
+        graphs.append(g)
+
+    labels = {'labels': torch.zeros(len(graphs)) if graphs_type == "benign" else torch.ones(len(graphs))}
+
+    return graphs, labels
 
 def create_graph(file):
 

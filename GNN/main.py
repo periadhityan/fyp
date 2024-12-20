@@ -3,14 +3,11 @@ os.environ["DGLBACKEND"] = "pytorch"
 
 import dgl
 import torch
-from torch.utils.data import DataLoader
-import torch.nn.functional as F
 from sklearn.model_selection import train_test_split
 from tqdm import tqdm
-import time
 
-from GraphCreation import create_graph
-from MessagePassing import GraphConvolution
+from GraphCreation import CreatingGraphs
+from MessagePassing import PassingMessages
 from GraphClassifier import HetroClassifier
 
 def main():
@@ -21,47 +18,46 @@ def main():
     message_passing_rounds = 3
 
 
-    """graphs, labels = CreatingGraphs(graphs_folder, graphs_type)
-    dgl.save_graphs(f'mini.bin', graphs, labels)"""
+    graphs, labels = CreatingGraphs(graphs_folder, graphs_type)
+    dgl.save_graphs(f'mini.bin', graphs, labels)
 
-    """graphs, labels = dgl.load_graphs(benign_graphs)
+    graphs, labels = dgl.load_graphs(benign_graphs)
     PassingMessages(graphs, message_passing_rounds)
-    dgl.save_graphs('benign.bin', graphs, labels)"""
+    dgl.save_graphs('benign.bin', graphs, labels)
 
     graphs, labels = dgl.load_graphs('mini.bin')
     labels = labels['labels']
 
-    dataset = list(zip(graphs, labels))
-    train_set, test_set = train_test_split(dataset, test_size=0.2, random_state=42)
+    rel_names = graphs[0].canonical_etypes
+    in_dim = 32
+    hidden_dim = 32
+    n_classes = 2
 
-    train_loader = DataLoader(train_set, batch_size=1, shuffle=True, collate_fn=dgl.batch)
-    test_loader = DataLoader(test_set, batch_size=1, shuffle=False, collate_fn=dgl.batch)
+    model = HetroClassifier(in_dim, hidden_dim, n_classes, rel_names)
+    optimiser = torch.optim.Adam(model.parameters(), lr=0.01)
+    loss_fn = torch.nn.CrossEntropyLoss()
 
+    for epoch in range(10):
+        total_loss = 0.0
+        for i, graph in enumerate(graphs):
+            label = labels[i]
+            
+            assert 'h' in graph.ndata, f"Graph {i} does not have 'h' in ndata"
 
+            logits = model(graph)
 
-def CreatingGraphs(graphs_folder, graphs_type):
+            loss = loss_fn(logits, label)
+            total_loss += loss.item()
 
-    graphs = []
+            optimiser.zero_grad()
+            loss.backward()
+            optimiser.step()
 
-    for file in tqdm(os.listdir(graphs_folder), desc="Creating Graphs", unit="Graphs"):
-        json_file = os.path.join(graphs_folder, file)
-        g = create_graph(json_file)
-        graphs.append(g)
+            print(f"Epoch {epoch + 1}/10, Graph {i+1}/{len(graphs)}, Loss: {loss.item():.4f}")
 
-    labels = {'labels': torch.zeros(len(graphs)) if graphs_type == "benign" else torch.ones(len(graphs))}
+        avg_loss = total_loss/len(graphs)
+        print(f"Epoch {epoch+1}/{10}, Avg Loss: {avg_loss:.4f}")
 
-    return graphs, labels
-
-def PassingMessages(graphs, rounds):
-    
-    for g in tqdm(graphs, desc="Message Passing", unit="Graphs"):
-        for _ in range(rounds):
-            input = {ntype: 32 for ntype in g.ntypes}
-            hidden = {(srctype, etype, dsttype): 32 for srctype, etype, dsttype in g.canonical_etypes}
-            convolution = GraphConvolution(g, input, hidden)
-            feat_dict = {ntype: g.nodes[ntype].data['h'] for ntype in g.ntypes}
-
-            convolution(feat_dict)
 
 if __name__ == '__main__':
     main()

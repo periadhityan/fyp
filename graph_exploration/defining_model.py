@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
 
 def main():
-    graphs, labels = dgl.load_graphs('after_mp.bin')
+    graphs, labels = dgl.load_graphs('mini.bin')
     labels = labels['labels']
 
     dataset = list(zip(graphs, labels))
@@ -19,7 +19,7 @@ def main():
     test_dataloader = DataLoader(test_dataset, batch_size=1, shuffle=False, collate_fn=custom_collate_fn)
 
 
-    input_dim = 3 
+    input_dim = 32 
     hidden_dim = 128
     output_dim = len(torch.unique(labels))
 

@@ -6,6 +6,17 @@ import dgl.function as fn
 import torch.nn as nn
 from tqdm import tqdm
 
+def PassingMessages(graphs, rounds):
+    
+    for g in tqdm(graphs, desc="Message Passing", unit="Graphs"):
+        for _ in range(rounds):
+            input = {ntype: 32 for ntype in g.ntypes}
+            hidden = {(srctype, etype, dsttype): 32 for srctype, etype, dsttype in g.canonical_etypes}
+            convolution = GraphConvolution(g, input, hidden)
+            feat_dict = {ntype: g.nodes[ntype].data['h'] for ntype in g.ntypes}
+
+            convolution(feat_dict)
+
 class GraphConvolution():
     def __init__(self, graph, input, hidden):
         super(GraphConvolution, self).__init__()
