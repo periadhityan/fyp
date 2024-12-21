@@ -15,7 +15,7 @@ def PassingMessages(graphs, rounds):
             convolution = GraphConvolution(g, input, hidden)
             feat_dict = {ntype: g.nodes[ntype].data['h'] for ntype in g.ntypes}
 
-            convolution(feat_dict)
+            convolution.forward(feat_dict)
 
 class GraphConvolution():
     def __init__(self, graph, input, hidden):

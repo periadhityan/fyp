@@ -29,7 +29,10 @@ def CreatingGraphs(graphs_folder, graphs_type):
         g = create_graph(json_file)
         graphs.append(g)
 
-    labels = {'labels': torch.zeros(len(graphs)) if graphs_type == "benign" else torch.ones(len(graphs))}
+    if graphs_type == "benign":
+        labels = {'labels': torch.zeros(len(graphs))}
+    else:
+        labels = {'labels': torch.ones(len(graphs))}
 
     return graphs, labels
 
