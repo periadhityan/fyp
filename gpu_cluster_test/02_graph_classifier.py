@@ -40,7 +40,7 @@ def main():
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
-    num_epochs = 20
+    num_epochs = 1
 
     for epoch in range(num_epochs):
         model.train()
