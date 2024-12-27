@@ -4,8 +4,8 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH --mem=8G
-#SBATCH --time=60
-#SBATCH --job-name=MyJob
+#SBATCH --time=240
+#SBATCH --job-name=Testing_GNN
 #SBATCH --output=output_%x%j.out
 #SBATCH --error=error_%x_%j.err
 
