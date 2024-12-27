@@ -73,15 +73,11 @@ def main():
     with torch.no_grad():
         for graph, label in test_dataloader:
             graph = graph.to(device)
-            label = label.to(device)
             
             logits = model(graph)
             preds.append(torch.argmax(logits, dim=1))
             labels.append(label)
 
-    labels = labels.cpu()
-    preds = preds.cpu()
-    
     report = classification_report(labels, preds)
     with(open("outputs.txt", 'a')) as output:
         output.write(report)
