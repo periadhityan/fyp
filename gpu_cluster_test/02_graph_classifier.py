@@ -72,10 +72,10 @@ def main():
 
     with torch.no_grad():
         for graph, label in test_dataloader:
+
             graph = graph.to(device)
-            label = label.to(device)
-            
             logits = model(graph)
+            
             preds.append(torch.argmax(logits, dim=1))
             labels.append(label)
 
