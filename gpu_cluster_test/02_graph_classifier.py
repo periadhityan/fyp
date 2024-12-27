@@ -85,7 +85,7 @@ def main():
             predictions.append(prediction)
             labels.append(label)
 
-    report = classification_report(labels, predictions)
+    report = classification_report(labels, predictions, zero_division=1)
     with(open("outputs.txt", 'a')) as output:
         output.write(report)
 
