@@ -80,7 +80,7 @@ def main():
             prediction = torch.argmax(logits, dim=1)
 
             prediction = prediction.cpu().numpy()
-            label = label.cpu.numpy()
+            label = label.cpu().numpy()
 
             predictions.append(prediction)
             labels.append(label)
