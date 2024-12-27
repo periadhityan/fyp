@@ -68,7 +68,7 @@ def main():
         
     model.eval()
     
-    preds = []
+    predictions = []
     labels = []
 
     with torch.no_grad():
@@ -76,10 +76,16 @@ def main():
             graph = graph.to(device)
             
             logits = model(graph)
-            preds.append(torch.argmax(logits, dim=1))
+
+            prediction = torch.argmax(logits, dim=1)
+
+            prediction = prediction.cpu().numpy()
+            label = label.cpu.numpy()
+
+            predictions.append(prediction)
             labels.append(label)
 
-    report = classification_report(labels, preds)
+    report = classification_report(labels, predictions)
     with(open("outputs.txt", 'a')) as output:
         output.write(report)
 
