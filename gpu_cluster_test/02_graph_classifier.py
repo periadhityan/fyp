@@ -41,7 +41,7 @@ def main():
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
-    num_epochs = 1
+    num_epochs = 20
 
     for epoch in range(num_epochs):
         model.train()
@@ -80,7 +80,6 @@ def main():
             prediction = torch.argmax(logits, dim=1)
 
             prediction = prediction.cpu()
-
             predictions.append(prediction)
             labels.append(label)
 
