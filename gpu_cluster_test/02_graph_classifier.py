@@ -36,7 +36,7 @@ def main():
     unique_rel_names = sorted(unique_rel_names)
 
     
-    model = HeteroClassifier(1, 1, 2, unique_rel_names)
+    model = HeteroClassifier(32, 32, 2, unique_rel_names)
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
     num_epochs = 20
