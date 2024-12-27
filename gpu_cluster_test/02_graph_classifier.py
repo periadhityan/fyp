@@ -79,9 +79,6 @@ def main():
             preds.append(torch.argmax(logits, dim=1))
             labels.append(label)
 
-    labels = labels.cpu().numpy()
-    preds = preds.cpu().numpy()
-
     report = classification_report(labels, preds)
     with(open("outputs.txt", 'a')) as output:
         output.write(report)
