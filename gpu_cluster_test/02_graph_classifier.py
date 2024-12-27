@@ -58,7 +58,8 @@ def main():
 
             total_loss += loss.item()
 
-        print(f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_dataloader)}')
+        with(open("outputs.txt", 'a')) as output:
+            output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_dataloader)}\n'))
 
         
     model.eval()
@@ -73,7 +74,8 @@ def main():
             labels.append(label)
 
     report = classification_report(labels, preds)
-    print(report)
+    with(open("outputs.txt", 'a')) as output:
+        output.write(report)
 
 class RGCN(nn.Module):
     def __init__(self, in_feats, hid_feats, out_feats, rel_names):
