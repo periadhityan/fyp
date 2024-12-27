@@ -20,8 +20,6 @@ def main():
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
 
     dataset = list(zip(graphs, labels))
-
-    
     
 
     train, test = train_test_split(dataset, test_size=0.2, random_state=42)
@@ -38,6 +36,8 @@ def main():
 
     
     model = HeteroClassifier(32, 32, 2, unique_rel_names)
+    model.to(device)
+
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
     num_epochs = 20
@@ -48,6 +48,9 @@ def main():
 
         for graph, label in train_dataloader:
             label = label.long()
+
+            graph = graph.to(device)
+            label = label.to(device)
 
             logits = model(graph)
 
