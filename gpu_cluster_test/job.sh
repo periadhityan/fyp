@@ -6,8 +6,8 @@
 #SBATCH --mem=8G
 #SBATCH --time=60
 #SBATCH --job-name=MyJob
-#SBATCH --output=output_%x%j.out
-#SBATCH --error=error_%x_%j.err
+#SBATCH --output=job_outputs/output_%x%j.out
+#SBATCH --error=job_outputs/error_%x_%j.err
 
 
 

@@ -5,18 +5,16 @@ import os
 from tqdm import tqdm
 
 def main():
-    benign = "benign"
+    benign = "Benign_Graphs"
     benign_type = "benign"
-    malicious = "malicious"
+    malicious = "XSSSTORED_Graphs"
     malicious_type = "malicious"
 
     benign_graphs, benign_labels = CreatingGraphs(benign, benign_type)
     dgl.save_graphs('benign.bin', benign_graphs, benign_labels)
 
     malicous_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
-    dgl.save_graphs('malicious.bin', malicous_graphs, malicious_labels)
-
-    print("Completed")
+    dgl.save_graphs('xssstored.bin', malicous_graphs, malicious_labels)
 
 
 def CreatingGraphs(graphs_folder, graphs_type):

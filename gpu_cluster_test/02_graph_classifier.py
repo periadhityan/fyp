@@ -15,7 +15,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
     benign_graphs, benign_labels = dgl.load_graphs("benign.bin")
-    malicious_graphs, malicious_labels = dgl.load_graphs("malicious.bin")
+    malicious_graphs, malicious_labels = dgl.load_graphs("xssstored.bin")
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
@@ -62,7 +62,7 @@ def main():
 
             total_loss += loss.item()
 
-        with(open("outputs.txt", 'a')) as output:
+        with(open(f'Results.txt', 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(train_dataloader)}\n'))
 
         
@@ -84,7 +84,7 @@ def main():
             labels.append(label)
 
     report = classification_report(labels, predictions, zero_division=1)
-    with(open("outputs.txt", 'a')) as output:
+    with(open('Results.txt', 'a')) as output:
         output.write(report)
 
 class RGCN(nn.Module):
