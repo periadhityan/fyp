@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH --mem=8G
-#SBATCH --time=60
+#SBATCH --time=360
 #SBATCH --job-name=MyJob
 #SBATCH --output=job_outputs/output_%x%j.out
 #SBATCH --error=job_outputs/error_%x_%j.err
