@@ -4,6 +4,8 @@ import json
 import os
 from tqdm import tqdm
 
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 def main():
     benign = "Benign_Graphs"
     benign_type = "benign"
@@ -49,6 +51,7 @@ def create_graph(file):
         graph_data[(stype, etype, dsttype)] = (torch.tensor(source), torch.tensor(destination))
     
     g = dgl.heterograph(graph_data)
+    g.to(device)
     
     for ntype in g.ntypes:
         g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 32)
