@@ -9,14 +9,14 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def main():
     benign = "Benign_Graphs"
     benign_type = "benign"
-    malicious = "XSSSTORED_Graphs_1"
+    malicious = "XSSSTORED_Graphs"
     malicious_type = "malicious"
 
-    #benign_graphs, benign_labels = CreatingGraphs(benign, benign_type)
+    benign_graphs, benign_labels = CreatingGraphs(benign, benign_type)
     #dgl.save_graphs('benign.bin', benign_graphs, benign_labels)
 
     malicous_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
-    dgl.save_graphs('xssstored.bin', malicous_graphs, malicious_labels)
+    #dgl.save_graphs('xssstored.bin', malicous_graphs, malicious_labels)
 
 
 def CreatingGraphs(graphs_folder, graphs_type):
