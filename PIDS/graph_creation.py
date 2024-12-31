@@ -13,9 +13,10 @@ def CreatingGraphs(graphs_folder, graphs_type):
     graphs = []
 
     for file in tqdm(os.listdir(graphs_folder), desc="Creating Graphs", unit="Graphs"):
-        json_file = os.path.join(graphs_folder, file)
-        g = create_graph(json_file)
-        graphs.append(g)
+        if file.endswith(".json"):
+            json_file = os.path.join(graphs_folder, file)
+            g = create_graph(json_file)
+            graphs.append(g)
 
     if graphs_type == "benign":
         labels = {'labels': torch.zeros(len(graphs))}
