@@ -15,8 +15,9 @@ def main():
     benign_type = "benign"
 
     benign_graphs, benign_labels = CreatingGraphs(benign, benign_type)
+    print(benign_labels)
 
-    dataset = list(zip(benign_graphs, benign_labels))
+    dataset = list(zip(benign_graphs, benign_labels['labels']))
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
     unique_rel_names = set()
