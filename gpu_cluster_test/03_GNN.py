@@ -1,6 +1,5 @@
 import dgl
 import torch
-import numpy
 import json
 import os
 import dgl.function as fn
