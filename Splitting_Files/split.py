@@ -3,14 +3,12 @@ import shutil
 import random
 from tqdm import tqdm
 
-source = "Splitting_Files/Benign_Graphs"
-train = "Splitting_Files/Benign_Train"
-test = "Splitting_Files/Benign_Test"
-validate = "Splitting_Files/Benign_Validate"
+source = "Benign_Graphs"
+train = "Benign_Train"
+test = "Benign_Test"
 
 os.makedirs(train, exist_ok=True)
 os.makedirs(test, exist_ok=True)
-os.makedirs(validate, exist_ok=True)
 
 json_files = [f for f in os.listdir(source)]
 
