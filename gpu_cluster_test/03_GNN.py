@@ -195,3 +195,6 @@ def custom_collate_fn(batch):
     batch_labels = torch.stack(labels)
 
     return batched_graph, batch_labels
+
+if __name__ == "__main__":
+    main()
