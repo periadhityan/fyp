@@ -17,7 +17,7 @@ from model import HeteroClassifier
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    benign = "Benign_Graphs_Train"
+    benign = "Benign_Train"
     benign_type = "benign"
 
     benign_graphs, benign_labels = CreatingGraphs(benign, benign_type)
