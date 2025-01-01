@@ -11,12 +11,12 @@ from model import HeteroClassifier
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    malicious = ""
+    malicious = "XSSSTORED_Train1"
     malicious_type = "malicious"
 
     malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
 
-    dataset = list(zip(malicious_graphs, malicious_labels))
+    dataset = list(zip(malicious_graphs, malicious_labels['labels']))
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
     unique_rel_names = set()
@@ -55,7 +55,7 @@ def main():
         with(open(f'Results.txt', 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
 
-    torch.save(model, "")
+    torch.save(model, "XSSSTORED_32_Feat.pth")
 
 
 def custom_collate_fn(batch):
