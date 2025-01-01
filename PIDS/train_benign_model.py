@@ -22,10 +22,8 @@ def main():
 
     unique_rel_names = set()
 
-    for g in benign_graphs:
-        unique_rel_names.update(g.etypes)
-
-    unique_rel_names = sorted(unique_rel_names)
+    file = open("rel_names.txt", "r")
+    unique_rel_names = [line.strip() for line in file.readlines()]
 
     model = HeteroClassifier(32, 32, 2, unique_rel_names)
     model.to(device)
@@ -56,7 +54,7 @@ def main():
         with(open(f'Results.txt', 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
 
-    torch.save(model, "Benign_Model_32_Feat.pth")
+    torch.save(model.state_dict(), "Benign_Model_32_Feat.pth")
 
 
 def custom_collate_fn(batch):

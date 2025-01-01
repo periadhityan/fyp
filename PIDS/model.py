@@ -14,7 +14,7 @@ class RGCN(nn.Module):
 
         self.conv1 = dglnn.HeteroGraphConv({
             rel: dglnn.GraphConv(in_feats, hid_feats)
-            for rel in rel_names}, aggregate='sum')
+            for rel in rel_names}, aggregate='mean')
         
         self.conv2 = dglnn.HeteroGraphConv({
             rel: dglnn.GraphConv(hid_feats, out_feats)

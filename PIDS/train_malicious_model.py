@@ -16,20 +16,16 @@ def main():
 
     malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
 
+    file = open("rel_names.txt", "r")
+    unique_rel_names = [line.strip() for line in file.readlines()]
+
     print("Making dataloader")
     dataset = list(zip(malicious_graphs, malicious_labels['labels']))
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
-    print("Creating relations set")
-    unique_rel_names = set()
-
-    for g in malicious_graphs:
-        unique_rel_names.update(g.etypes)
-
-    unique_rel_names = sorted(unique_rel_names)
-
     print("Loading Model")
-    model = torch.load("Benign_Model_32_Feat.pth")
+    model = HeteroClassifier(32, 32, 2, unique_rel_names)
+    model.load_state_dict(torch.load("Benign_Model_32_Feat.pth"))
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
@@ -40,7 +36,6 @@ def main():
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
-
         for graph, label in dataloader:
             label = label.long()
 
@@ -61,6 +56,15 @@ def main():
 
     torch.save(model, "XSSSTORED_32_Feat.pth")
 
+def ensure_all_edge_types(graph, all_edge_types):
+    for e_type in all_edge_types:
+        if e_type not in graph.etypes:
+            print(f"Graph has no {e_type}")
+            # Add dummy edges for the missing edge type
+            src, dst = torch.tensor([], dtype=torch.int64), torch.tensor([], dtype=torch.int64)
+            graph.add_edges(src, dst, etype=e_type)
+            print(f"{e_type} added")
+    return graph
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)
