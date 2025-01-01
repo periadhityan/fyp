@@ -22,7 +22,6 @@ class RGCN(nn.Module):
     
     def forward(self, graph, inputs):
         
-        print(inputs)
         h = self.conv1(graph, inputs)
         h = {k: F.relu(v) for k, v in h.items()}
         h = self.conv2(graph, h)

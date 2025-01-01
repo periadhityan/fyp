@@ -25,7 +25,6 @@ def main():
         unique_rel_names.update(g.etypes)
 
     unique_rel_names = sorted(unique_rel_names)
-    print(unique_rel_names)
 
     model = HeteroClassifier(32,32,2, unique_rel_names)
     model.to(device)
