@@ -16,9 +16,11 @@ def main():
 
     malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
 
+    print("Making dataloader")
     dataset = list(zip(malicious_graphs, malicious_labels['labels']))
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
+    print("Creating relations set")
     unique_rel_names = set()
 
     for g in malicious_graphs:
@@ -26,13 +28,15 @@ def main():
 
     unique_rel_names = sorted(unique_rel_names)
 
-    model = HeteroClassifier(32,32,2, unique_rel_names)
+    print("Loading Model")
+    model = torch.load("Benign_Model_32_Feat.pth")
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
     num_epochs = 20
 
+    print("Training starts here")
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
