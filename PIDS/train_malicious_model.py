@@ -8,11 +8,10 @@ from graph_creation import CreatingGraphs
 from model import HeteroClassifier
 
 
-device1 = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-device2 = torch.device('cpu')
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    malicious = "XSSSTORED_Train1"
+    malicious = "XSSREFLECTED_Train1"
     malicious_type = "malicious"
 
     malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
@@ -27,41 +26,37 @@ def main():
     print("Loading Model")
     model = HeteroClassifier(32, 32, 2, unique_rel_names)
     model.load_state_dict(torch.load("Benign_Model_32_Feat.pth"))
-    model.to(device1)
+    model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
     num_epochs = 20
-    accumulation_steps =  4
 
     print("Training starts here")
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
-        for i, (graph, label) in enumerate(dataloader):
+        for graph, label in dataloader:
             label = label.long()
 
-            graph = graph.to(device1)
-            label = label.to(device1)
+            graph = graph.to(device)
+            label = label.to(device)
 
             logits = model(graph)
 
             loss = loss_fn(logits, label)
-            loss = loss/accumulation_steps
-            
+            optimiser.zero_grad()
             loss.backward()
+            optimiser.step()
 
-            if (i+1)% accumulation_steps == 0 or i == len(dataloader)-1:
-                optimiser.step()
-                optimiser.zero_grad()
+            total_loss += loss.item()
 
-            total_loss += loss.item() * accumulation_steps
-
-        with(open(f'Results_XSSSTORED.txt', 'a')) as output:
+        with(open(f'Results_XSSREFLECTED.txt', 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
+            
+        torch.cuda.empty_cache()
 
-
-    torch.save(model, "XSSSTORED_32_Feat.pth")
+    torch.save(model, "XSSREFLECTED_32_Feat.pth")
 
 def ensure_all_edge_types(graph, all_edge_types):
     for e_type in all_edge_types:
