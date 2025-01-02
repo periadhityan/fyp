@@ -8,7 +8,8 @@ from graph_creation import CreatingGraphs
 from model import HeteroClassifier
 
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device1 = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device2 = torch.device('cpu')
 
 def main():
     malicious = "XSSSTORED_Train1"
@@ -26,33 +27,39 @@ def main():
     print("Loading Model")
     model = HeteroClassifier(32, 32, 2, unique_rel_names)
     model.load_state_dict(torch.load("Benign_Model_32_Feat.pth"))
-    model.to(device)
+    model.to(device1)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
     num_epochs = 20
+    accumulation_steps =  4
 
     print("Training starts here")
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
-        for graph, label in dataloader:
+        for i, (graph, label) in enumerate(dataloader):
             label = label.long()
 
-            graph = graph.to(device)
-            label = label.to(device)
+            graph = graph.to(device1)
+            label = label.to(device1)
 
             logits = model(graph)
 
             loss = loss_fn(logits, label)
-            optimiser.zero_grad()
+            loss = loss/accumulation_steps
+            
             loss.backward()
-            optimiser.step()
 
-            total_loss += loss.item()
+            if (i+1)% accumulation_steps == 0 or i == len(dataloader)-1:
+                optimiser.step()
+                optimiser.zero_grad()
 
-        with(open(f'Results.txt', 'a')) as output:
+            total_loss += loss.item() * accumulation_steps
+
+        with(open(f'Results_XSSSTORED.txt', 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
+
 
     torch.save(model, "XSSSTORED_32_Feat.pth")
 

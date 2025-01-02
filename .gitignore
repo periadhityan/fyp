@@ -8,4 +8,4 @@
 *.txt
 *.out
 *.pth
-/pycache/*
+__pycache__/*

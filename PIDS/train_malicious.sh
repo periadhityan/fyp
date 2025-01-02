@@ -3,7 +3,7 @@
 #SBATCH --qos=normal
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
-#SBATCH --mem=32G
+#SBATCH --mem=64G
 #SBATCH --ntasks-per-node=20
 #SBATCH --time=360
 #SBATCH --job-name=MalTrain
