@@ -8,7 +8,7 @@
 #SBATCH --time=360
 #SBATCH --job-name=
 #SBATCH --output=Job_Outputs/output_%x%j.out
-#SBATCH --error= Job_Outputs/error_%x_%j.err
+#SBATCH --error=Job_Outputs/error_%x_%j.err
 
 module load cuda/11.8
 module load anaconda
