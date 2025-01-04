@@ -11,7 +11,7 @@ from model import HeteroClassifier
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    malicious = "XSSREFLECTED_Train1"
+    malicious = "XSSREFLECTED_Train2"
     malicious_type = "malicious"
 
     malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
@@ -25,12 +25,15 @@ def main():
 
     print("Loading Model")
     model = HeteroClassifier(32, 32, 2, unique_rel_names)
-    model.load_state_dict(torch.load("Benign_Model_32_Feat.pth"))
+    model.load_state_dict(torch.load("XSSREFLECTED_32_Feat.pth"))
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
     num_epochs = 20
+
+    with(open(f'Results_XSSREFLECTED.txt', 'a')) as output:
+        output.write((f'training set {malicious}\n'))
 
     print("Training starts here")
     for epoch in range(num_epochs):
@@ -57,16 +60,6 @@ def main():
         torch.cuda.empty_cache()
 
     torch.save(model, "XSSREFLECTED_32_Feat.pth")
-
-def ensure_all_edge_types(graph, all_edge_types):
-    for e_type in all_edge_types:
-        if e_type not in graph.etypes:
-            print(f"Graph has no {e_type}")
-            # Add dummy edges for the missing edge type
-            src, dst = torch.tensor([], dtype=torch.int64), torch.tensor([], dtype=torch.int64)
-            graph.add_edges(src, dst, etype=e_type)
-            print(f"{e_type} added")
-    return graph
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)

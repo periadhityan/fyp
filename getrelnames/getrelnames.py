@@ -5,6 +5,7 @@ import json
 def main():
     folder1 = "Benign_Graphs"
     folder2 = "XSSSTORED_Graphs"
+    folder3 = "XSSREFLECTED_Graphs"
 
     unique_rel_names = set()
 
@@ -16,6 +17,11 @@ def main():
     for file in tqdm(os.listdir(folder2), desc="Gathering Relation Names", unit="Graphs"):
         if file.endswith(".json"):
             json_file = os.path.join(folder2, file)
+            edges = get_etypes(json_file)
+            unique_rel_names.update(edges)
+    for file in tqdm(os.listdir(folder3), desc="Gathering Relation Names", unit="Graphs"):
+        if file.endswith(".json"):
+            json_file = os.path.join(folder3, file)
             edges = get_etypes(json_file)
             unique_rel_names.update(edges)
 
@@ -40,9 +46,4 @@ def get_etypes(file):
     return edges
         
 
-def test():
-    file = open("rel_names.txt", "r")
-    lines = [line.strip() for line in file.readlines()]
-    print(len(lines))
-
-test()
+main()
