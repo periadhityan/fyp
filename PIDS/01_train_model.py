@@ -65,7 +65,7 @@ def main():
     with(open(results_file, 'a')) as output:
         output.write('\n')
         
-    torch.save(model.state_dict(), f"{attack}_{feats}.pth")
+    torch.save(model.state_dict(), f"Models/{attack}_{feats}.pth")
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)
