@@ -13,4 +13,4 @@
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python test_model.py
+python 02_test_model.py
