@@ -28,6 +28,7 @@ def main():
 
     model = HeteroClassifier(feats, feats, 2, unique_rel_names)
     if model_to_load != "None":
+        print(f"{model_to_load} Loaded!")
         model.load_state_dict(torch.load(model_to_load))
     model.to(device)
 
