@@ -59,7 +59,7 @@ def main():
             
         torch.cuda.empty_cache()
 
-    torch.save(model, "XSSREFLECTED_32_Feat.pth")
+    torch.save(model.state_dict(), "XSSREFLECTED_32_Feat.pth")
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)
