@@ -11,7 +11,7 @@ from model import HeteroClassifier
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    malicious = "XSSREFLECTED_Train2"
+    malicious = "XSSREFLECTED_Train1"
     malicious_type = "malicious"
 
     malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
@@ -25,7 +25,7 @@ def main():
 
     print("Loading Model")
     model = HeteroClassifier(32, 32, 2, unique_rel_names)
-    model.load_state_dict(torch.load("XSSREFLECTED_32_Feat.pth"))
+    model.load_state_dict(torch.load("Benign_Model_32_Feat.pth"))
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
@@ -33,7 +33,7 @@ def main():
     num_epochs = 20
 
     with(open(f'Results_XSSREFLECTED.txt', 'a')) as output:
-        output.write((f'training set {malicious}\n'))
+        output.write((f'Training set {malicious}\n'))
 
     print("Training starts here")
     for epoch in range(num_epochs):
