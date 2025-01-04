@@ -10,7 +10,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def main():
     benign_graphs = "BENIGN/Benign_Test"
     malicious_graphs = sys.argv[1]
-    feats = sys.argv[2]
+    feats = int(sys.argv[2])
     model_to_load = sys.argv[3]
     attack = sys.argv[4]
 

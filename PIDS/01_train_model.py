@@ -12,7 +12,7 @@ def main():
     graphs_folder = sys.argv[1]
     graphs_type = sys.argv[2]
     attack = sys.argv[3]
-    feats = sys.argv[4]
+    feats = int(sys.argv[4])
     model_to_load = sys.argv[5]
 
     results_file = f"{attack}_{feats}_results.txt"
