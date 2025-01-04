@@ -1,39 +1,42 @@
 import dgl
 import torch
+import sys
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.optim import Adam
-
 from graph_creation import CreatingGraphs
 from model import HeteroClassifier
-
-
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    malicious = "XSSREFLECTED_Train1"
-    malicious_type = "malicious"
+    graphs_folder = sys.argv[1]
+    graphs_type = sys.argv[2]
+    attack = sys.argv[3]
+    feats = sys.argv[4]
+    model_to_load = sys.arg[5]
 
-    malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
+    results_file = f"{attack}_results.txt"
+    
+
+    graphs, labels = CreatingGraphs(graphs_folder, graphs_type)
 
     file = open("rel_names.txt", "r")
     unique_rel_names = [line.strip() for line in file.readlines()]
 
-    print("Making dataloader")
-    dataset = list(zip(malicious_graphs, malicious_labels['labels']))
+    dataset = list(zip(graphs, labels['labels']))
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
-    print("Loading Model")
-    model = HeteroClassifier(32, 32, 2, unique_rel_names)
-    model.load_state_dict(torch.load("Benign_Model_32_Feat.pth"))
+    model = HeteroClassifier(feats, feats, 2, unique_rel_names)
+    if model_to_load != "None":
+        model.load_state_dict(torch.load(model_to_load))
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
     num_epochs = 20
 
-    with(open(f'Results_XSSREFLECTED.txt', 'a')) as output:
-        output.write((f'Training set {malicious}\n'))
+    with(open(results_file, 'a')) as output:
+        output.write((f'Training set {graphs_folder}\n'))
 
     print("Training starts here")
     for epoch in range(num_epochs):
@@ -54,12 +57,15 @@ def main():
 
             total_loss += loss.item()
 
-        with(open(f'Results_XSSREFLECTED.txt', 'a')) as output:
+        with(open(results_file, 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
             
         torch.cuda.empty_cache()
 
-    torch.save(model.state_dict(), "XSSREFLECTED_32_Feat.pth")
+    with(open(results_file, 'a')) as output:
+        output.write('\n')
+        
+    torch.save(model.state_dict(), f"{attack}_{feats}.pth")
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)

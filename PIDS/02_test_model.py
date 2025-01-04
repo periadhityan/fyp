@@ -1,51 +1,44 @@
 import dgl
 import torch
-import json
-import os
-import dgl.function as fn
-import torch.nn as nn
+import sys
 from torch.utils.data import DataLoader
-import dgl.nn as dglnn
-import torch.nn.functional as F
-from tqdm import tqdm
-from torch.optim import Adam
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report
-
 from graph_creation import CreatingGraphs
 from model import HeteroClassifier
-
-
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    benign = "Benign_Test"
-    benign_type = "benign"
-    malicious = "XSSSTORED_Test"
-    malicious_type = "malicious"
+    benign_graphs = "BENIGN/Benign_Test"
+    malicious_graphs = sys.argv[1]
+    feats = sys.argv[2]
+    model_to_load = sys.argv[3]
+    attack = sys.argv[4]
 
-    benign_graphs, benign_labels = CreatingGraphs(benign, benign_type)
-    malicious_graphs, malicious_labels = CreatingGraphs(malicious, malicious_type)
+    results_file = f"{attack}_results.txt"
+
+    benign_graphs, benign_labels = CreatingGraphs(benign_graphs, "benign")
+    malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs, "malicious")
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
 
     dataset = list(zip(graphs, labels))
-
     dataloader = DataLoader(dataset, batch_size=1, shuffle=False, collate_fn=custom_collate_fn)
 
     file = open("rel_names.txt", "r")
     unique_rel_names = [line.strip() for line in file.readlines()]
     
-    model = HeteroClassifier(32, 32, 2, unique_rel_names)
-    model.load_state_dict(torch.load("XSSSTORED_32_Feat.pth"))
+    model = HeteroClassifier(feats, feats, 2, unique_rel_names)
+    model.load_state_dict(torch.load(model_to_load))
     model.to(device)
 
-        
     model.eval()
     
     predictions = []
     labels = []
+
+    with(open(results_file, 'a')) as output:
+        output.write(f"Evaluating {attack} Model")
 
     with torch.no_grad():
         for graph, label in dataloader:
@@ -60,7 +53,7 @@ def main():
             labels.append(label)
 
     report = classification_report(labels, predictions, zero_division=1)
-    with(open(f'{malicious}_Results.txt', 'a')) as output:
+    with(open(results_file, 'a')) as output:
         output.write(report)
 
 def custom_collate_fn(batch):
