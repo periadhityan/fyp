@@ -3,10 +3,10 @@ import shutil
 import random
 from tqdm import tqdm
 
-source = "XSSDOM_Graphs"
-train1 = "XSSDOM_Train1"
-train2 = "XSSDOM_Train2"
-test = "XSSDOM_Test"
+source = "SQLINJECTION_Graphs"
+train1 = "SQLINJECTION_Train1"
+train2 = "SQLINJECTION_Train2"
+test = "SQLINJECTION_Test"
 
 os.makedirs(train1, exist_ok=True)
 os.makedirs(train2, exist_ok=True)
