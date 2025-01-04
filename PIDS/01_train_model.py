@@ -13,9 +13,9 @@ def main():
     graphs_type = sys.argv[2]
     attack = sys.argv[3]
     feats = sys.argv[4]
-    model_to_load = sys.arg[5]
+    model_to_load = sys.argv[5]
 
-    results_file = f"{attack}_results.txt"
+    results_file = f"{attack}_{feats}_results.txt"
     
 
     graphs, labels = CreatingGraphs(graphs_folder, graphs_type)

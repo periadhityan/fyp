@@ -14,7 +14,7 @@ def main():
     model_to_load = sys.argv[3]
     attack = sys.argv[4]
 
-    results_file = f"{attack}_results.txt"
+    results_file = f"{attack}_{feats}_results.txt"
 
     benign_graphs, benign_labels = CreatingGraphs(benign_graphs, "benign")
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs, "malicious")
