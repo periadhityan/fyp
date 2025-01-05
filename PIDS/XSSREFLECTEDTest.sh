@@ -13,4 +13,4 @@
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python 02_test_model.py XSSREFLECTED/XSSREFLECTED_Test 32 XSSREFLECTED_32.pth XSSREFLECTED
+python 02_test_model.py XSSREFLECTED/XSSREFLECTED_Test 32 Models/XSSREFLECTED_32.pth XSSREFLECTED
