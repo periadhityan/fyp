@@ -13,4 +13,4 @@
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python 02_test_model.py XSSDOM/XSSDOM_Test 32 XSSDOM_32.pth XSSDOM
+python 02_test_model.py XSSDOM/XSSDOM_Test 32 Models/XSSDOM_32.pth XSSDOM
