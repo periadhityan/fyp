@@ -18,7 +18,7 @@ def main():
     results_file = f"{attack}_{feats}_results.txt"
     
 
-    graphs, labels = CreatingGraphs(graphs_folder, graphs_type)
+    graphs, labels = CreatingGraphs(graphs_folder, graphs_type, feats)
 
     file = open("rel_names.txt", "r")
     unique_rel_names = [line.strip() for line in file.readlines()]

@@ -8,14 +8,14 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 
-def CreatingGraphs(graphs_folder, graphs_type):
+def CreatingGraphs(graphs_folder, graphs_type, feats):
 
     graphs = []
 
     for file in tqdm(os.listdir(graphs_folder), desc="Creating Graphs", unit="Graphs"):
         if file.endswith(".json"):
             json_file = os.path.join(graphs_folder, file)
-            g = create_graph(json_file)
+            g = create_graph(json_file, feats)
             graphs.append(g)
 
     if graphs_type == "benign":
@@ -25,7 +25,7 @@ def CreatingGraphs(graphs_folder, graphs_type):
 
     return graphs, labels
 
-def create_graph(file):
+def create_graph(file, feats):
 
     with open(file, "r") as f:
         data = json.load(f)
@@ -43,6 +43,6 @@ def create_graph(file):
     g = dgl.heterograph(graph_data)
         
     for ntype in g.ntypes:
-        g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), 32)
+        g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), feats)
 
     return g 
