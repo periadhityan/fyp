@@ -6,7 +6,7 @@
 #SBATCH --mem=32G
 #SBATCH --ntasks-per-node=20
 #SBATCH --time=360
-#SBATCH --job-name=
+#SBATCH --job-name=MalTest
 #SBATCH --output=Job_Outputs/output_%x%j.out
 #SBATCH --error=Job_Outputs/error_%x_%j.err
 
