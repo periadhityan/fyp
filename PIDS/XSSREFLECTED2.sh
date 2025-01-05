@@ -13,4 +13,4 @@
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python 01_train_model.py XSSREFLECTED/XSSREFLECTED_Train2 malicious XSSREFLECTED 32 Models/Benign_32.pth
+python 01_train_model.py XSSREFLECTED/XSSREFLECTED_Train2 malicious XSSREFLECTED 64 Models/XSSREFLECTED_64.pth
