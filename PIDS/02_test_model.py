@@ -16,8 +16,8 @@ def main():
 
     results_file = f"{attack}_{feats}_results.txt"
 
-    benign_graphs, benign_labels = CreatingGraphs(benign_graphs, "benign")
-    malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs, "malicious")
+    benign_graphs, benign_labels = CreatingGraphs(benign_graphs, "benign", feats)
+    malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs, "malicious", feats)
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
