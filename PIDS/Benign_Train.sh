@@ -13,4 +13,4 @@
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python 01_train_model.py BENIGN/Benign_Train benign Benign 64 None
+python 01_train_model.py BENIGN/Benign_Train benign Benign 32 None
