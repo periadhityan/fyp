@@ -9,12 +9,12 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
     benign_graphs = "BENIGN/Benign_Test"
-    malicious_graphs = sys.argv[1]
+    attack_type = sys.argv[1]
     feats = int(sys.argv[2])
-    model_to_load = sys.argv[3]
-    attack = sys.argv[4]
 
-    results_file = f"{attack}_{feats}_results.txt"
+    results_file = f"Results/{attack_type}_{feats}_results.txt"
+    malicious_graphs = f"{attack_type}/{attack_type}_Test"
+    model_to_load = f"{attack_type}_{feats}.pth"
 
     benign_graphs, benign_labels = CreatingGraphs(benign_graphs, "benign", feats)
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs, "malicious", feats)
@@ -38,7 +38,7 @@ def main():
     labels = []
 
     with(open(results_file, 'a')) as output:
-        output.write(f"Evaluating {attack} Model\n")
+        output.write(f"Evaluating {attack_type} Model\n")
 
     with torch.no_grad():
         for graph, label in dataloader:

@@ -9,13 +9,14 @@ from model import HeteroClassifier
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
-    graphs_folder = sys.argv[1]
-    graphs_type = sys.argv[2]
-    feats = int(sys.argv[3])
+    attack_type = sys.argv[1]
+    feats = int(sys.argv[2])
 
-    results_file = f"{graphs_type}_{feats}_results.txt"
+    malicious_graphs_folder = f"{attack_type}/{attack_type}_Train"
+
+    results_file = f"Results/{attack_type}_{feats}_results.txt"
     
-    malicious_graphs, malicious_labels = CreatingGraphs(graphs_folder, graphs_type, feats)
+    malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs_folder, attack_type, feats)
     benign_graphs, benign_labels = CreatingGraphs("BENIGN/Benign_Train", "Benign")
 
     graphs = benign_graphs+malicious_graphs
@@ -32,12 +33,11 @@ def main():
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
-    num_epochs = 20
+    num_epochs = 10
 
     with(open(results_file, 'a')) as output:
-        output.write((f'Training set {graphs_folder}\n'))
+        output.write((f'Training with {attack_type} Graphs\n'))
 
-    print("Training starts here")
     for epoch in range(num_epochs):
         model.train()
         total_loss = 0
@@ -64,7 +64,7 @@ def main():
     with(open(results_file, 'a')) as output:
         output.write('\n')
         
-    torch.save(model.state_dict(), f"Models/{graphs_type}_{feats}.pth")
+    torch.save(model.state_dict(), f"Models/{attack_type}_{feats}.pth")
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)
