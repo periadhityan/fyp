@@ -14,7 +14,7 @@ def main():
 
     results_file = f"Results/{attack_type}_{feats}_results.txt"
     malicious_graphs = f"{attack_type}/{attack_type}_Test"
-    model_to_load = f"{attack_type}_{feats}.pth"
+    model_to_load = f"Models/{attack_type}_{feats}.pth"
 
     benign_graphs, benign_labels = CreatingGraphs(benign_graphs, "Benign", feats)
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs, attack_type, feats)
