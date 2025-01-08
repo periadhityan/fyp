@@ -3,9 +3,9 @@
 #SBATCH --qos=normal
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
-#SBATCH --mem=64G
+#SBATCH --mem=94G
 #SBATCH --ntasks-per-node=20
-#SBATCH --time=360
+#SBATCH --time=960
 #SBATCH --job-name=GNNTrain
 #SBATCH --output=Job_Outputs/output_%x%j.out
 #SBATCH --error=Job_Outputs/error_%x_%j.err
