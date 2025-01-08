@@ -25,7 +25,7 @@ def main():
     file = open("rel_names.txt", "r")
     unique_rel_names = [line.strip() for line in file.readlines()]
 
-    dataset = list(zip(graphs, labels['labels']))
+    dataset = list(zip(graphs, labels))
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
     model = HeteroClassifier(feats, feats, 2, unique_rel_names)
