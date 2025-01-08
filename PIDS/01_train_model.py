@@ -11,14 +11,15 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def main():
     graphs_folder = sys.argv[1]
     graphs_type = sys.argv[2]
-    attack = sys.argv[3]
-    feats = int(sys.argv[4])
-    model_to_load = sys.argv[5]
+    feats = int(sys.argv[3])
 
-    results_file = f"{attack}_{feats}_results.txt"
+    results_file = f"{graphs_type}_{feats}_results.txt"
     
+    malicious_graphs, malicious_labels = CreatingGraphs(graphs_folder, graphs_type, feats)
+    benign_graphs, benign_labels = CreatingGraphs("BENIGN/Benign_Train", "Benign")
 
-    graphs, labels = CreatingGraphs(graphs_folder, graphs_type, feats)
+    graphs = benign_graphs+malicious_graphs
+    labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
 
     file = open("rel_names.txt", "r")
     unique_rel_names = [line.strip() for line in file.readlines()]
@@ -27,8 +28,6 @@ def main():
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
     model = HeteroClassifier(feats, feats, 2, unique_rel_names)
-    if model_to_load != "None":
-        model.load_state_dict(torch.load(model_to_load))
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
@@ -65,7 +64,7 @@ def main():
     with(open(results_file, 'a')) as output:
         output.write('\n')
         
-    torch.save(model.state_dict(), f"Models/{attack}_{feats}.pth")
+    torch.save(model.state_dict(), f"Models/{graphs_type}_{feats}.pth")
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)
