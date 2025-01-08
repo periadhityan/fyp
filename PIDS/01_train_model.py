@@ -11,6 +11,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def main():
     attack_type = sys.argv[1]
     feats = int(sys.argv[2])
+    num_epochs = int(sys.argv[3])
 
     malicious_graphs_folder = f"{attack_type}/{attack_type}_Train"
 
