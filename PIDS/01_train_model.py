@@ -12,13 +12,15 @@ def main():
     attack_type = sys.argv[1]
     feats = int(sys.argv[2])
     num_epochs = int(sys.argv[3])
+    load_model = sys.argv[4]
+    set = sys.argv[5]
 
-    malicious_graphs_folder = f"{attack_type}/{attack_type}_Train"
+    malicious_graphs_folder = f"{attack_type}/{attack_type}_Train{set}"
 
     results_file = f"Results/{attack_type}_{feats}_results.txt"
     
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs_folder, attack_type, feats)
-    benign_graphs, benign_labels = CreatingGraphs("BENIGN/Benign_Train", "Benign", feats)
+    benign_graphs, benign_labels = CreatingGraphs(f"BENIGN/Benign_Train{set}", "Benign", feats)
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
@@ -30,6 +32,8 @@ def main():
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
     model = HeteroClassifier(feats, feats, 2, unique_rel_names)
+    if load_model == "Load":
+            model.load_state_dict(torch.load(f"Models/{attack_type}_{feats}.pth"))
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
@@ -37,7 +41,7 @@ def main():
     num_epochs = 10
 
     with(open(results_file, 'a')) as output:
-        output.write((f'Training with {attack_type} Graphs\n'))
+        output.write((f'Training with {attack_type} Graphs set {set}\n'))
 
     for epoch in range(num_epochs):
         model.train()
