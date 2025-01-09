@@ -6,11 +6,11 @@
 #SBATCH --mem=94G
 #SBATCH --ntasks-per-node=20
 #SBATCH --time=960
-#SBATCH --job-name=GNNTest
+#SBATCH --job-name=GNNTrain
 #SBATCH --output=Job_Outputs/output_%x%j.out
 #SBATCH --error=Job_Outputs/error_%x_%j.err
 
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python 02_test_model.py XSSREFLECTED 128
+python 01_train_model.py XSSREFLECTED 128 10 None 1
