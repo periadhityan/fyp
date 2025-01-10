@@ -41,6 +41,7 @@ def create_graph(file, feats):
         graph_data[(stype, etype, dsttype)] = (torch.tensor(source), torch.tensor(destination))
     
     g = dgl.heterograph(graph_data)
+    g.to(device)
         
     for ntype in g.ntypes:
         g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), feats)
