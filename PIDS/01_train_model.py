@@ -1,6 +1,7 @@
 import dgl
 import torch
 import sys
+import resource
 import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.optim import Adam
@@ -21,21 +22,15 @@ def main():
     
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs_folder, attack_type, feats)
     with(open(results_file, 'a')) as output:
-        allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
-        reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
-        output.write("Memory Allocations after Malicious Graphs Creation")
-        output.write((f"GPU Memory Allocated: {allocated:.2f} MB\n"))
-        output.write((f"GPU Memory Reserved: {reserved:.2f} MB\n"))
-        output.write("\n")
-    
+        max_memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        max_memory_mb = max_memory / (1024 * 1024)
+        output.write(f"Maximum memory used After Malicious Graph Creation: {max_memory_mb:.2f} MB\n")  
+
     benign_graphs, benign_labels = CreatingGraphs(f"BENIGN/Benign_Train{set}", "Benign", feats)
     with(open(results_file, 'a')) as output:
-        allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
-        reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
-        output.write("Memory Allocations after Benign Graphs Creation")
-        output.write((f"GPU Memory Allocated: {allocated:.2f} MB\n"))
-        output.write((f"GPU Memory Reserved: {reserved:.2f} MB\n"))
-        output.write("\n")
+        max_memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+        max_memory_mb = max_memory / (1024 * 1024)
+        output.write(f"Maximum memory used After Benign Graph Creation: {max_memory_mb:.2f} MB\n")  
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
@@ -56,7 +51,7 @@ def main():
     num_epochs = 10
 
     with(open(results_file, 'a')) as output:
-        output.write((f'Training with {attack_type} Graphs set {set}\n'))
+        output.write((f'\nTraining with {attack_type} Graphs set {set}\n'))
 
     for epoch in range(num_epochs):
         model.train()
@@ -80,8 +75,10 @@ def main():
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
             allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
             reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
-            output.write((f"GPU Memory Allocated: {allocated:.2f} MB"))
-            output.write((f"GPU Memory Reserved: {reserved:.2f} MB"))
+            output.write("Memory Allocations\n")
+            output.write((f"GPU Memory Allocated: {allocated:.2f} MB\n"))
+            output.write((f"GPU Memory Reserved: {reserved:.2f} MB\n"))
+            output.write("\n")
         
         del graph, label
         torch.cuda.empty_cache()
