@@ -23,10 +23,19 @@ def main():
     with(open(results_file, 'a')) as output:
         allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
         reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
-        output.write((f"GPU Memory Allocated: {allocated:.2f} MB"))
-        output.write((f"GPU Memory Reserved: {reserved:.2f} MB"))
+        output.write("Memory Allocations after Malicious Graphs Creation")
+        output.write((f"GPU Memory Allocated: {allocated:.2f} MB\n"))
+        output.write((f"GPU Memory Reserved: {reserved:.2f} MB\n"))
+        output.write("\n")
     
     benign_graphs, benign_labels = CreatingGraphs(f"BENIGN/Benign_Train{set}", "Benign", feats)
+    with(open(results_file, 'a')) as output:
+        allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
+        reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
+        output.write("Memory Allocations after Benign Graphs Creation")
+        output.write((f"GPU Memory Allocated: {allocated:.2f} MB\n"))
+        output.write((f"GPU Memory Reserved: {reserved:.2f} MB\n"))
+        output.write("\n")
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
