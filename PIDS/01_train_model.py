@@ -20,6 +20,12 @@ def main():
     results_file = f"Results/{attack_type}_{feats}_results.txt"
     
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs_folder, attack_type, feats)
+    with(open(results_file, 'a')) as output:
+        allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
+        reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
+        output.write((f"GPU Memory Allocated: {allocated:.2f} MB"))
+        output.write((f"GPU Memory Reserved: {reserved:.2f} MB"))
+    
     benign_graphs, benign_labels = CreatingGraphs(f"BENIGN/Benign_Train{set}", "Benign", feats)
 
     graphs = benign_graphs+malicious_graphs
@@ -63,7 +69,12 @@ def main():
 
         with(open(results_file, 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
-            
+            allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
+            reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
+            output.write((f"GPU Memory Allocated: {allocated:.2f} MB"))
+            output.write((f"GPU Memory Reserved: {reserved:.2f} MB"))
+        
+        del graph, label
         torch.cuda.empty_cache()
 
     with(open(results_file, 'a')) as output:
@@ -77,6 +88,12 @@ def custom_collate_fn(batch):
     batch_labels = torch.stack(labels)
 
     return batched_graph, batch_labels
+
+def print_gpu_memory():
+    allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
+    reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
+    print(f"GPU Memory Allocated: {allocated:.2f} MB")
+    print(f"GPU Memory Reserved: {reserved:.2f} MB")
 
 if __name__ == '__main__':
     main()
