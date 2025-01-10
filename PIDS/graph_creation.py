@@ -44,6 +44,6 @@ def create_graph(file, feats):
     g.to(device)
         
     for ntype in g.ntypes:
-        g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), feats)
+        g.nodes[ntype].data['h'] = torch.randn(g.num_nodes(ntype), feats).to(device)
 
     return g 
