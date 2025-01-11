@@ -13,4 +13,4 @@
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python 01_train_model.py XSSREFLECTED 256 20 None 1
+python 01_train_model.py XSSREFLECTED 64 20 Load 4
