@@ -53,6 +53,7 @@ def main():
             labels.append(label)
 
     report = classification_report(labels, predictions)
+    print(report)
     with(open(results_file, 'a')) as output:
         output.write(report)
 
