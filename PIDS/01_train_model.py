@@ -39,7 +39,6 @@ def main():
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
     loss_fn = nn.CrossEntropyLoss()
-    num_epochs = 10
 
     with(open(results_file, 'a')) as output:
         output.write((f'\nTraining with {attack_type} Graphs set {set}\n'))
