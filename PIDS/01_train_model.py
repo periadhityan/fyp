@@ -21,16 +21,7 @@ def main():
     results_file = f"Results/{attack_type}_{feats}_results.txt"
     
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs_folder, attack_type, feats)
-    with(open(results_file, 'a')) as output:
-        max_memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        max_memory_mb = max_memory / (1024 * 1024)
-        output.write(f"Maximum memory used After Malicious Graph Creation: {max_memory_mb:.2f} MB\n")  
-
     benign_graphs, benign_labels = CreatingGraphs(f"BENIGN/Benign_Train{set}", "Benign", feats)
-    with(open(results_file, 'a')) as output:
-        max_memory = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-        max_memory_mb = max_memory / (1024 * 1024)
-        output.write(f"Maximum memory used After Benign Graph Creation: {max_memory_mb:.2f} MB\n")  
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
@@ -73,18 +64,9 @@ def main():
 
         with(open(results_file, 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
-            allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
-            reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
-            output.write("Memory Allocations\n")
-            output.write((f"GPU Memory Allocated: {allocated:.2f} MB\n"))
-            output.write((f"GPU Memory Reserved: {reserved:.2f} MB\n"))
-            output.write("\n")
-        
+
         del graph, label
         torch.cuda.empty_cache()
-
-    with(open(results_file, 'a')) as output:
-        output.write('\n')
         
     torch.save(model.state_dict(), f"Models/{attack_type}_{feats}.pth")
 
@@ -94,12 +76,6 @@ def custom_collate_fn(batch):
     batch_labels = torch.stack(labels)
 
     return batched_graph, batch_labels
-
-def print_gpu_memory():
-    allocated = torch.cuda.memory_allocated(device) / 1e6  # Convert to MB
-    reserved = torch.cuda.memory_reserved(device) / 1e6    # Convert to MB
-    print(f"GPU Memory Allocated: {allocated:.2f} MB")
-    print(f"GPU Memory Reserved: {reserved:.2f} MB")
 
 if __name__ == '__main__':
     main()
