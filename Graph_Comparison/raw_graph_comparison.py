@@ -121,8 +121,8 @@ def compare_raw_graphs(g1_data, g2_data):
         node_overlap = len(g1_nodes & g2_nodes) / len(g1_nodes | g2_nodes) if g1_nodes | g2_nodes else 0
         edge_overlap = len(g1_edges & g2_edges) / len(g1_edges | g2_edges) if g1_edges | g2_edges else 0
 
-        print("Node Overlap: ", node_overlap)
-        print("Edge Overlap: ", edge_overlap)
+        print(f"Node Overlap: {node_overlap*100:.2f}%")
+        print(f"Edge Overlap: {edge_overlap*100:.2f}%")
         print()
 
 def compare_raw_counter_graphs(g1_data, g2_data):
@@ -154,8 +154,8 @@ def compare_raw_counter_graphs(g1_data, g2_data):
         node_overlap = len(g1_nodes & g2_nodes) / len(g1_nodes | g2_nodes) if g1_nodes | g2_nodes else 0
         edge_overlap = len(g1_edges & g2_edges) / len(g1_edges | g2_edges) if g1_edges | g2_edges else 0
 
-        print("Node Overlap: ", node_overlap)
-        print("Edge Overlap: ", edge_overlap)
+        print(f"Node Overlap: {node_overlap*100:.2f}%")
+        print(f"Edge Overlap: {edge_overlap*100:.2f}%")
         print()
 
 
