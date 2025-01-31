@@ -14,4 +14,4 @@
 module load cuda/11.8
 module load anaconda
 source activate TestEnv
-python 01_train_model.py #Graphs_Folder #Attack_Name #Feats
+python 01_train_model.py #Attack_Name #Feats #epochs #Load model or None #set(1-16)
