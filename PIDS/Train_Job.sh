@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --partition=UGGPU-TC1
-#SBATCH --qos=q_ug1x16
+#SBATCH --qos=normal
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
-#SBATCH --mem=94G
-#SBATCH --ntasks-per-node=20
-#SBATCH --time=960
+#SBATCH --mem=60G
+#SBATCH --ntasks-per-node=15
+#SBATCH --time=60
 #SBATCH --job-name=GNNTrain
 #SBATCH --output=Job_Outputs/output_%x_%j.out
 #SBATCH --error=Job_Outputs/error_%x_%j.err
