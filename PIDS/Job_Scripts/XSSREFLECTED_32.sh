@@ -3,7 +3,7 @@
 #SBATCH --qos=normal
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
-#SBATCH --mem=94G
+#SBATCH --mem=4G
 #SBATCH --ntasks-per-node=5
 #SBATCH --time=300
 #SBATCH --job-name=GNNTrain
