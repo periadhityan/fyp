@@ -34,7 +34,7 @@ def main():
 
     model = HeteroClassifier(feats, feats, 2, unique_rel_names)
     if load_model == "Load":
-            model.load_state_dict(torch.load(f"Models/{attack_type}_{feats}.pth"))
+            model.load_state_dict(torch.load(f"Models/{attack_type}_{feats}_{num_epochs}.pth"))
     model.to(device)
 
     optimiser = Adam(model.parameters(), lr=0.01, weight_decay=1e-4)
