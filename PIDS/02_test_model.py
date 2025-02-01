@@ -11,10 +11,11 @@ def main():
     benign_graphs = "BENIGN/Benign_Test"
     attack_type = sys.argv[1]
     feats = int(sys.argv[2])
+    num_epochs = int(sys.argv[3])
 
-    results_file = f"Results/{attack_type}_{feats}_results.txt"
+    results_file = f"Results/{attack_type}_{feats}_{num_epochs}_results.txt"
     malicious_graphs = f"{attack_type}/{attack_type}_Test"
-    model_to_load = f"Models/{attack_type}_{feats}.pth"
+    model_to_load = f"Models/{attack_type}_{feats}_{num_epochs}.pth"
 
     benign_graphs, benign_labels = CreatingGraphs(benign_graphs, "Benign", feats)
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs, attack_type, feats)

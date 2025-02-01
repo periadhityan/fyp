@@ -16,13 +16,7 @@ module load anaconda
 source activate TestEnv
 
 ATTACK=XSSREFLECTED
-FEATS=128
+FEATS=64
 EPOCHS=10
 
-python 01_train_model.py $ATTACK $FEATS $EPOCHS None 1
-
-for i in {2..16}; do
-    python 01_train_model.py $ATTACK $FEATS $EPOCHS Load $i
-done
-
-python 02_test_model.py $ATTACK $FEATS
+python 02_test_model.py $ATTACK $FEATS $EPOCHS

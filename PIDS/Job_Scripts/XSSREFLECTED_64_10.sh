@@ -6,7 +6,7 @@
 #SBATCH --mem=94G
 #SBATCH --ntasks-per-node=20
 #SBATCH --time=960
-#SBATCH --job-name=GNNTrain
+#SBATCH --job-name=XSSR
 #SBATCH --output=Job_Outputs/output_%x_%j.out
 #SBATCH --error=Job_Outputs/error_%x_%j.err
 #SBATCH --chdir=/home/FYP/peri0006/fyp/PIDS
@@ -25,4 +25,4 @@ for i in {2..16}; do
     python 01_train_model.py $ATTACK $FEATS $EPOCHS Load $i
 done
 
-python 02_test_model.py $ATTACK $FEATS
+python 02_test_model.py $ATTACK $FEATS $EPOCHS
