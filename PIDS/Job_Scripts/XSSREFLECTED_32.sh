@@ -20,10 +20,10 @@ FEATS=64
 EPOCHS=10
 
 for i in {1..16}; do
-    if [$i eq 1]; then
+    if [$i -eq 1]; then
         python 01_train_model.py $ATTACK $FEATS $EPOCHS None 1
     else
-        python 01_train_model.py $ATTACK $FEATS $EPOCHS $LOADTYPE $i
+        python 01_train_model.py $ATTACK $FEATS $EPOCHS Load $i
     fi
 done
 
