@@ -39,7 +39,7 @@ def main():
     labels = []
 
     with(open(results_file, 'a')) as output:
-        output.write(f"Evaluating {attack_type} Model\n")
+        output.write(f"\nEvaluating {attack_type} Model with {feats} node features and {num_epochs} epochs\n")
 
     with torch.no_grad():
         for graph, label in dataloader:
