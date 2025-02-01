@@ -16,7 +16,7 @@ module load anaconda
 source activate TestEnv
 
 ATTACK=XSSREFLECTED
-FEATS=32
+FEATS=64
 EPOCHS=10
 
 for i in {1..16}; do
