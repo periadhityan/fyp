@@ -18,7 +18,7 @@ def main():
 
     malicious_graphs_folder = f"{attack_type}/{attack_type}_Train{set}"
 
-    results_file = f"Results/{attack_type}_{feats}_results.txt"
+    results_file = f"Results/{attack_type}_{feats}_{num_epochs}_results.txt"
     
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs_folder, attack_type, feats)
     benign_graphs, benign_labels = CreatingGraphs(f"BENIGN/Benign_Train{set}", "Benign", feats)
@@ -67,7 +67,7 @@ def main():
         del graph, label
         torch.cuda.empty_cache()
         
-    torch.save(model.state_dict(), f"Models/{attack_type}_{feats}.pth")
+    torch.save(model.state_dict(), f"Models/{attack_type}_{feats}_{num_epochs}.pth")
 
 def custom_collate_fn(batch):
     graphs, labels = zip(*batch)
