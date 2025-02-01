@@ -60,6 +60,8 @@ def main():
             optimiser.step()
 
             total_loss += loss.item()
+            del graph, label
+            torch.cuda.empty_cache()
 
         with(open(results_file, 'a')) as output:
             output.write((f'Epoch {epoch+1}/{num_epochs}, Loss: {total_loss/len(dataloader)}\n'))
