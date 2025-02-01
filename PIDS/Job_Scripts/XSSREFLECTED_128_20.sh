@@ -6,7 +6,7 @@
 #SBATCH --mem=94G
 #SBATCH --ntasks-per-node=20
 #SBATCH --time=960
-#SBATCH --job-name=XSSR_64_10
+#SBATCH --job-name=XSSR_128_20
 #SBATCH --output=Job_Outputs/output_%x_%j.out
 #SBATCH --error=Job_Outputs/error_%x_%j.err
 #SBATCH --chdir=/home/FYP/peri0006/fyp/PIDS
