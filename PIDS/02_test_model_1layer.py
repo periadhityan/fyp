@@ -4,7 +4,7 @@ import sys
 from torch.utils.data import DataLoader
 from sklearn.metrics import classification_report
 from graph_creation import CreatingGraphs
-from model import HeteroClassifier
+from model_1layer import HeteroClassifier
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
