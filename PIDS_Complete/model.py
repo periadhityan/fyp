@@ -49,7 +49,6 @@ class HeteroClassifier(nn.Module):
                     g.nodes[ntype].data['h'] = h[ntype]
                 else:
                     continue
-            # Calculate graph representation by average readout.
 
             hg = None
 
