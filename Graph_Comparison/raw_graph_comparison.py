@@ -51,14 +51,17 @@ def main():
     benign_for_comparison = [(message, message2), (submit, submit2), (query, query2), (ping, ping2), (databaseentry, databaseentry2), (login, login2)]
     malicious_for_comparison = [(xssstored, xssstored2), (xssreflected, xssreflected2), (xssdom, xssdom2), (sqlinjection, sqlinjection2), (commandinjection, commandinjection2), (bruteforce, bruteforce2)]
     counter_graphs_for_comparison = [(xssstored, message), (xssreflected, submit), (xssdom, query), (commandinjection, ping), (sqlinjection, databaseentry), (bruteforce, login)]
-
+    all_graphs = [xssdom, xssstored, xssreflected, message, submit, query, ping, databaseentry, login, sqlinjection, commandinjection, bruteforce]
+    all_graph_perms = list(itertools.permutations(all_graphs, 2))
+    '''
     for benign_graphs in benign_for_comparison:
         compare_raw_graphs(*benign_graphs)
 
     for malicious_graphs in malicious_for_comparison:
         compare_raw_graphs(*malicious_graphs)
+    '''
 
-    for graphs in counter_graphs_for_comparison:
+    for graphs in all_graph_perms:
         compare_raw_counter_graphs(*graphs)
 
     
