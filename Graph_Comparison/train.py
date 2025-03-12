@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from graph_creation import CreatingGraphs
-from model import HeteroClassifier
+from GAT import HeteroGATClassifier
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def main():
@@ -20,7 +20,7 @@ def main():
     results_file = f"Results/{attack_type}_Results.txt"
     
     malicious_graphs, malicious_labels = CreatingGraphs(malicious_graphs_folder, attack_type, feats)
-    benign_graphs, benign_labels = CreatingGraphs(f"BENIGN2/Benign_Train{set}", "Benign", feats)
+    benign_graphs, benign_labels = CreatingGraphs(f"BENIGN/Benign_Train{set}", "Benign", feats)
 
     graphs = benign_graphs+malicious_graphs
     labels = torch.cat([benign_labels['labels'], malicious_labels['labels']])
@@ -31,7 +31,7 @@ def main():
     dataset = list(zip(graphs, labels))
     dataloader = DataLoader(dataset, batch_size=1, shuffle=True, collate_fn=custom_collate_fn)
 
-    model = HeteroClassifier(feats, feats, 2, unique_rel_names)
+    model = HeteroGATClassifier(feats, feats, 2, 2, unique_rel_names)
     if load_model == "Load":
             model.load_state_dict(torch.load(f"Models/{attack_type}.pth"))
     model.to(device)

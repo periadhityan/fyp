@@ -3,16 +3,13 @@ import shutil
 import random
 from tqdm import tqdm
 
-source = "BRUTEFORCE_Graphs"
-train = "BRUTEFORCE_Train"
-test = "BRUTEFORCE_Test"
+source = "XSSSTORED"
+train = "XSSSTORED_Train"
+test = "XSSSTORED_Test"
 
 json_files = [f for f in os.listdir(source)]
 
 random.shuffle(json_files)
-
-train_ratio = 0.8
-test_ratio = 0.2
 
 train_files = json_files[:1600]
 test_files = json_files[1600:]

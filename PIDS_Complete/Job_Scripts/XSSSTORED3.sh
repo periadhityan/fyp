@@ -19,8 +19,6 @@ ATTACK=XSSSTORED
 FEATS=64
 EPOCHS=10
 
-python train.py $ATTACK $FEATS $EPOCHS None 1
-
-for i in {2..5}; do
+for i in {1..15}; do
     python train.py $ATTACK $FEATS $EPOCHS Load $i
 done
