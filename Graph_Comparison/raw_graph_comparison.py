@@ -162,63 +162,6 @@ def compare_raw_counter_graphs(g1_data, g2_data):
         print()
 
 
-            
-
-def multi_round_message_passing(graph, convolution, rounds):
-    for _ in range(rounds):
-        feature_dictionary = {ntype: graph.nodes[ntype].data['h'] for ntype in graph.ntypes}
-        convolution.forward(feature_dictionary)
-
-
-class GraphConvolution(nn.Module):
-    def __init__(self, graph, input_features, hidden_features):
-        super(GraphConvolution, self).__init__()
-        self.graph = graph
-        self.weight = nn.ModuleDict({
-            f'{srctype}-{etype}-{dsttype}': nn.Linear(input_features[srctype], hidden_features[(srctype, etype, dsttype)])
-            for srctype, etype, dsttype in graph.canonical_etypes
-        })
-
-    def forward(self, feature_dictionary):
-        g = self.graph
-        funcs = {}
-
-        for srctype, etype, dsttype in g.canonical_etypes:
-            key = f'{srctype}-{etype}-{dsttype}'
-            Wh = self.weight[key](feature_dictionary[srctype])
-            g.nodes[srctype].data['h'] = Wh
-            funcs[(srctype, etype, dsttype)] = fn.copy_u(f'h', 'm'), fn.mean('m', 'h')
-
-        g.multi_update_all(funcs, 'sum')
-
-class RGCN(nn.Module):
-    def __init__(self, in_feats, hid_feats, out_feats, rel_names):
-        super().__init__()
-
-        self.conv1 = dglnn.HeteroGraphConv({
-            rel: dglnn.GraphConv(in_feats, hid_feats)
-            for rel in rel_names}, aggregate='mean')
-        
-        self.conv2 = dglnn.HeteroGraphConv({
-            rel: dglnn.GraphConv(hid_feats, out_feats)
-            for rel in rel_names}, aggregate='mean')
-    
-    def forward(self, graph):
-
-        inputs = {ntype: graph.nodes[ntype].data['h'] for ntype in graph.ntypes}
-        
-        h = self.conv1(graph, inputs)
-        h = {k: F.relu(v) for k, v in h.items()}
-        h = self.conv2(graph, h)
-
-        with graph.local_scope():
-            for ntype in h:
-                graph.nodes[ntype].data['h'] = h[ntype]
-
-        return graph
-
-
-
 if __name__ == "__main__":
     main()
 

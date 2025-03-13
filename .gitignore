@@ -11,5 +11,7 @@
 !rel_names.txt
 !PIDS_Tuning_Parameters/Models/*
 !PIDS_Tuning_Parameters/Results/*
+!PIDS_Complete/Models/*
+!PIDS_Complete/Results/*
 __pycache__/
 .DS_Store
