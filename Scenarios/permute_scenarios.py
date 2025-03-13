@@ -325,7 +325,7 @@ def malicious_permutations():
             f.write("\n")
 
 def main():
-    #benign_permutations()
+    benign_permutations()
     malicious_permutations()
 
 if __name__ == "__main__":

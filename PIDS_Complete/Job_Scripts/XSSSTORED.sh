@@ -22,6 +22,8 @@ EPOCHS=10
 
 python train.py $ATTACK $FEATS $EPOCHS None 1
 
-for i in {2..5}; do
+for i in {2..16}; do
     python train.py $ATTACK $FEATS $EPOCHS Load $i
 done
+
+python test.py $ATTACK $FEATS
